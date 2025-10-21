@@ -24,3 +24,11 @@ body {
   background-color: #38ad38 !important;
   border-color: #38ad38 !important;
 }
+
+.nav_margin {
+  margin-top: 4vh;
+}
+
+.navbar {
+  z-index: 99;
+}
