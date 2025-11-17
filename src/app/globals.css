@@ -1,34 +1,216 @@
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --font-sans: Arial, Helvetica, sans-serif;
-}
-/* dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212;
-    --foreground: #f5f5f5;
-  }
+  /* Color system */
+  --background-page: #fafafa;
+  --background-surface: #ffffff;
+  --border-subtle: #e5e5e5;
+  --text-primary: #111111;
+  --text-muted: #737373;
+  --accent-primary: #38ad38;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
+
+  /* Radius & shadow */
+  --radius-card: 12px;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 /* Global styles */
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--background-page);
+  color: var(--text-primary);
   font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 .btn-primary {
-  background-color: #38ad38 !important;
-  border-color: #38ad38 !important;
+  background-color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
 }
 
-.nav_margin {
+/* App shell & layout helpers */
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--background-page);
+}
+
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 88px 16px 32px; /* account for fixed navbar height */
+}
+
+.page-container-wide {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 88px 16px 32px;
+}
+
+.card-elevated {
+  background-color: var(--background-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.card-bordered {
+  background-color: var(--background-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.text-muted-soft {
+  color: var(--text-muted);
+}
+
+.section-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Navbar refinements */
+.navbar {
+  z-index: 99;
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--background-surface) !important;
+  height: 64px;
+}
+
+.navbar-brand img {
+  height: 36px;
+  width: auto;
+}
+
+.navbar-nav .nav-link {
+  font-size: var(--font-size-base);
+  padding-inline: 12px;
+}
+
+.navbar-shadow {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+.nav-margin{
   margin-top: 4vh;
 }
 
-.navbar {
-  z-index: 99;
+.sidebar{
+  z-index: 999;
 }
+
+.light-text{
+  color: #f8f9fa;
+}
+
+.mt-user {
+  margin-top: 20vh;
+  margin-left: 8vh;
+}
+
+/* Override bg-white for col-9 in home page */
+.bg-light-blue {
+  background-color: #e3f2fd !important;
+}
+
+/* Home sidebar (Instagram-inspired) */
+.app-sidebar {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  width: 72px;
+  padding: 24px 12px;
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  transition: width 0.2s ease;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.app-sidebar:hover {
+  width: 220px;
+}
+
+.app-sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.app-sidebar-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.app-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 15px;
+  margin-bottom: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-sidebar-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.app-sidebar-item-active {
+  background-color: var(--background-surface);
+  color: var(--text-primary);
+}
+
+.app-sidebar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+}
+
+.app-sidebar-label {
+  opacity: 0;
+  transform: translateX(-4px);
+  white-space: nowrap;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.app-sidebar:hover .app-sidebar-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 767.98px) {
+  .app-sidebar {
+    display: none;
+  }
+}
+
+

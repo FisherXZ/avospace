@@ -32,16 +32,26 @@ export default function Navbar() {
     const isLoginPage = pathname === '/';
 
     return(
-        <nav className="navbar navbar-expand-lg navbar-light bg-light px-4 fixed-top">
-            <Link href="/" className="navbar-brand" onClick={handleLogoClick}>
-            <img src = "/assets/images/Avospace.png" className="img-fluid" style={{width: '20vh', height: '6vh'}}/></Link>
+        <nav className="navbar navbar-expand-lg px-4 fixed-top navbar-shadow">
+            <Link href="/" className="navbar-brand d-flex align-items-center" onClick={handleLogoClick}>
+                <img src="/AvoSpace.png" className="img-fluid" alt="AvoSpace" />
+            </Link>
             {!isLoginPage && user && (
-                <div className="navbar-nav ms-auto">
-                    <Link href="/account" className="nav-link">Account</Link>
-                    <button className="btn btn-link nav-link" onClick={handleLogOut}>Logout</button>
+                <div className="ms-auto d-flex align-items-center gap-2">
+                    <Link
+                        href="/account"
+                        className="btn btn-outline-secondary btn-sm rounded-pill px-3"
+                    >
+                        Account
+                    </Link>
+                    <button
+                        className="btn btn-outline-secondary btn-sm rounded-pill px-3"
+                        onClick={handleLogOut}
+                    >
+                        Logout
+                    </button>
                 </div>
             )}
-    
         </nav>
     )
 }
