@@ -163,8 +163,15 @@
 
 /* Section Header */
 .section-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 3rem;
+  text-align: left;
+}
+
+.section-header > div {
+  flex: 1;
 }
 
 .section-title {
@@ -172,6 +179,32 @@
   font-weight: 700;
   color: var(--forest-green);
   margin-bottom: 0.5rem;
+}
+
+.map-view-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-green), var(--sage-green));
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(91, 155, 126, 0.3);
+  white-space: nowrap;
+}
+
+.map-view-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(91, 155, 126, 0.4);
+}
+
+.map-view-button:active {
+  transform: translateY(0);
 }
 
 .section-subtitle {
@@ -438,8 +471,19 @@
     height: 1px;
   }
 
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
   .section-title {
     font-size: 1.75rem;
+  }
+
+  .map-view-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .spots-grid {
@@ -478,6 +522,11 @@
 
   .section-title {
     font-size: 1.5rem;
+  }
+
+  .map-view-button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
   }
 
   .section-subtitle {

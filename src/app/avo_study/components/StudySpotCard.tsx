@@ -126,7 +126,6 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
             <div className="spot-count">
               <span className="count-badge">
                 {checkIns.length} studying
-                {openCount > 0 && ` · ${openCount} open`}
               </span>
             </div>
           )}

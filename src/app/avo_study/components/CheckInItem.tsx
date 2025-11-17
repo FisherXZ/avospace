@@ -36,7 +36,7 @@ export default function CheckInItem({ checkIn }: CheckInItemProps) {
   
   const handleClick = () => {
     if (checkIn.userId) {
-      router.push(`/profile/${checkIn.userId}`);
+      router.push(`/user/${checkIn.userId}`);
     }
   };
   

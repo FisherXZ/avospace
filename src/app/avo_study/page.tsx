@@ -175,8 +175,17 @@ export default function AvoStudyPage() {
         <div className="container avo-study-container" style={{ paddingTop: '88px' }}>
           {/* Section Header */}
           <div className="section-header">
-            <h2 className="section-title">Active Study Spots</h2>
-            <p className="section-subtitle">Check in to let others know you're studying</p>
+            <div>
+              <h2 className="section-title">Active Study Spots</h2>
+              <p className="section-subtitle">Check in to let others know you're studying</p>
+            </div>
+            <button 
+              className="map-view-button"
+              onClick={() => router.push('/map')}
+              title="View map"
+            >
+              🗺️ Map View
+            </button>
           </div>
 
           {/* Active Check-In Banner */}
