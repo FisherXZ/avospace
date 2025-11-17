@@ -117,101 +117,7 @@
   background: #a0aec0;
 }
 
-/* Check-in Item - Minimal Style (Kaomoji + Badge) */
-.check-in-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0.5rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  animation: slideIn 0.3s ease-out;
-  gap: 0.25rem;
-  width: 70px !important;
-  height: 70px !important;
-  flex-shrink: 0 !important;
-  min-width: 70px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.check-in-item:hover {
-  border-color: var(--primary-green, #5B9B7E);
-  box-shadow: 0 2px 8px rgba(91, 155, 126, 0.2);
-  transform: scale(1.05);
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Kaomoji Display */
-.check-in-kaomoji {
-  font-size: 0.75rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-/* Status Badge */
-.status-badge {
-  padding: 0.15rem 0.4rem;
-  border-radius: 8px;
-  font-size: 0.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-/* Primary Status Colors */
-.status-coral {
-  background: var(--coral, #E89B8E);
-  color: white;
-}
-
-.status-sky-blue {
-  background: var(--sky-blue, #A8C8E8);
-  color: white;
-}
-
-.status-yellow {
-  background: #FCD34D;
-  color: #78350F;
-}
-
-/* Secondary Status Colors */
-.status-red {
-  background: #EF4444;
-  color: white;
-}
-
-.status-purple {
-  background: #9333EA;
-  color: white;
-}
-
-.status-orange {
-  background: #F97316;
-  color: white;
-}
-
-.status-green {
-  background: #10B981;
-  color: white;
-}
+/* Note: Check-in item styles have been moved to CheckInItem.css */
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
@@ -233,24 +139,6 @@
     overflow-x: auto !important;
     gap: 0.5rem;
     padding: 0.25rem;
-  }
-
-  .check-in-item {
-    padding: 0.5rem;
-    gap: 0.25rem;
-    width: 60px !important;
-    height: 60px !important;
-    flex-shrink: 0 !important;
-    min-width: 60px;
-  }
-
-  .check-in-kaomoji {
-    font-size: 0.625rem;
-  }
-
-  .status-badge {
-    padding: 0.15rem 0.35rem;
-    font-size: 0.45rem;
   }
 
   .count-badge {

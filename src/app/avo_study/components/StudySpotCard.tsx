@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { 
   collection, 
   query, 
@@ -11,24 +10,11 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
-import { StudySpot, CheckIn, PopulatedCheckIn, CheckInStatus } from '@/types/study';
+import { StudySpot, CheckIn, PopulatedCheckIn } from '@/types/study';
 import { getUserData } from '../utils/userCache';
 import CheckInModal from './CheckInModal';
+import CheckInItem from './CheckInItem';
 import './StudySpotCard.css';
-
-// Helper function to get status display info
-function getStatusInfo(status: CheckInStatus) {
-  const statusMap = {
-    'open': { color: 'coral', label: 'Open', emoji: '🤝' },
-    'solo': { color: 'sky-blue', label: 'Solo', emoji: '🎧' },
-    'break': { color: 'yellow', label: 'Break', emoji: '☕' },
-    'sos': { color: 'red', label: 'SOS', emoji: '🆘' },
-    'allnighter': { color: 'purple', label: 'All-nighter', emoji: '🌙' },
-    'procrastinating': { color: 'orange', label: 'Procrastinating', emoji: '☕' },
-    'cram': { color: 'green', label: 'Cram', emoji: '📚' },
-  };
-  return statusMap[status] || statusMap['solo'];
-}
 
 interface StudySpotCardProps {
   spot: StudySpot;
@@ -197,35 +183,3 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
     </>
   );
 }
-
-// Sub-component for individual check-in display - Minimal Style
-function CheckInItem({ checkIn }: { checkIn: PopulatedCheckIn }) {
-  const router = useRouter();
-  const statusInfo = getStatusInfo(checkIn.status);
-  
-  const handleClick = () => {
-    if (checkIn.userId) {
-      router.push(`/profile/${checkIn.userId}`);
-    }
-  };
-  
-  return (
-    <div 
-      className="check-in-item" 
-      onClick={handleClick}
-      style={{ cursor: 'pointer' }}
-      title={`View ${checkIn.user?.username || 'user'}'s profile`}
-    >
-      {/* Kaomoji */}
-      <div className="check-in-kaomoji">
-        {checkIn.user?.kao || '(^_^)'}
-      </div>
-
-      {/* Status Badge */}
-      <span className={`status-badge status-${statusInfo.color}`}>
-        {statusInfo.emoji} {statusInfo.label}
-      </span>
-    </div>
-  );
-}
-
