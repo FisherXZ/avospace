@@ -16,8 +16,17 @@ export interface StudySpot {
 
 /**
  * Check-In Status
+ * Primary: open, solo, break
+ * Secondary: sos, allnighter, procrastinating, cram
  */
-export type CheckInStatus = 'open' | 'solo';
+export type CheckInStatus = 
+  | 'open'          // Open to study together
+  | 'solo'          // Solo mode
+  | 'break'         // On a break
+  | 'sos'           // 🆘 SOS - brain not working
+  | 'allnighter'    // 🌙 All-nighter energy
+  | 'procrastinating' // ☕ Procrastinating
+  | 'cram';         // 📚 Cram mode activated
 
 /**
  * Study Request Status
@@ -157,5 +166,22 @@ export const RATE_LIMITS = {
 export const CHAR_LIMITS = {
   STATUS_NOTE: 120,
   STUDY_REQUEST_MESSAGE: 500,
+} as const;
+
+/**
+ * Status option configurations
+ */
+export const STATUS_OPTIONS = {
+  PRIMARY: [
+    { value: 'open' as const, label: 'Open to study together', emoji: '🤝', description: 'Available to study together' },
+    { value: 'solo' as const, label: 'Solo mode', emoji: '🎧', description: 'Focused solo work' },
+    { value: 'break' as const, label: 'On a break', emoji: '☕', description: 'Taking a break' },
+  ],
+  SECONDARY: [
+    { value: 'sos' as const, label: 'SOS - brain not working', emoji: '🆘', description: 'Need help' },
+    { value: 'allnighter' as const, label: 'All-nighter energy', emoji: '🌙', description: 'Late night crew' },
+    { value: 'procrastinating' as const, label: 'Procrastinating', emoji: '☕', description: 'Just vibing' },
+    { value: 'cram' as const, label: 'Cram mode activated', emoji: '📚', description: 'Very focused' },
+  ],
 } as const;
 

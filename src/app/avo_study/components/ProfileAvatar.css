@@ -1,0 +1,63 @@
+/* ============================================
+   PROFILE AVATAR COMPONENT
+   ============================================ */
+
+.profile-avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-avatar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.profile-avatar-initial {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sizes */
+.profile-avatar-small {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.profile-avatar-medium {
+  width: 56px;
+  height: 56px;
+  font-size: 1.5rem;
+}
+
+.profile-avatar-large {
+  width: 72px;
+  height: 72px;
+  font-size: 2rem;
+}
+
+/* Hover Effect */
+.profile-avatar {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+

@@ -12,11 +12,15 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
-// Use the same Firebase config from your app
-// Import from your firebase.ts file or paste config here
+// Firebase config from your app
 const firebaseConfig = {
-  // YOUR FIREBASE CONFIG HERE
-  // Get this from src/lib/firebase.ts
+  apiKey: "AIzaSyBMBoG-NX1lJmf01CAd26SY1Xp6B_PAMzU",
+  authDomain: "avospace-6a984.firebaseapp.com",
+  projectId: "avospace-6a984",
+  storageBucket: "avospace-6a984.firebasestorage.app",
+  messagingSenderId: "378745001771",
+  appId: "1:378745001771:web:5257c9b6fc40ab98a8d76e",
+  measurementId: "G-XNYHDHSFGC"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -68,13 +72,16 @@ async function seedStudySpots() {
   try {
     for (const spot of studySpots) {
       const docRef = doc(db, 'study_spots', spot.id);
-      await setDoc(docRef, spot);
+      // Don't store 'id' field in the document - it's already the document ID
+      const { id, ...spotData } = spot;
+      await setDoc(docRef, spotData);
       console.log(`✅ Added: ${spot.name} (${spot.id})`);
     }
 
     console.log('\n🎉 Successfully seeded all study spots!');
     console.log(`\nTotal spots added: ${studySpots.length}`);
-    console.log('\n📋 Each spot has: id, name, hours (3 fields)');
+    console.log('\n📋 Each spot has: name, hours (2 fields)');
+    console.log('\n💡 Note: Document ID serves as the spot ID');
     
   } catch (error) {
     console.error('❌ Error seeding study spots:', error);
@@ -82,16 +89,14 @@ async function seedStudySpots() {
   }
 }
 
-// Run the seed function if this file is executed directly
-if (require.main === module) {
-  seedStudySpots()
-    .then(() => {
-      console.log('\n✨ Seeding complete! You can now use the study spots in your app.');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('Fatal error:', error);
-      process.exit(1);
-    });
-}
+// Run the seed function
+seedStudySpots()
+  .then(() => {
+    console.log('\n✨ Seeding complete! You can now use the study spots in your app.');
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });
 
