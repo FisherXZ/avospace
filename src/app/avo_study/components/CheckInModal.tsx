@@ -193,7 +193,9 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
               {/* Status Picker */}
               <div className="form-section">
                 <label className="form-label-custom">
-                  <span className="label-icon">👥</span>
+                  <span className="label-icon">
+                    <img src="/avocado-icon.png" alt="Status" style={{ width: '20px', height: '20px', objectFit: 'contain', verticalAlign: 'middle' }} />
+                  </span>
                   Study status
                 </label>
                 

@@ -30,7 +30,7 @@ export default function MapOverlay() {
         {/* Top Bar */}
         <div className="top-bar">
           <div className="avatar" onClick={handleAvatar} title="Go to profile">
-            🥑
+            <img src="/avocado-icon.png" alt="Avo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
           <div className="search-chip" onClick={handleSearch}>
             <span className="icon">🔍</span>

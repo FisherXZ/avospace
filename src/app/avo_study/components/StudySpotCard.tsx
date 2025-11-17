@@ -142,7 +142,9 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
             </div>
           ) : checkIns.length === 0 ? (
             <div className="roster-empty">
-              <div className="empty-roster-icon">👥</div>
+              <div className="empty-roster-icon">
+                <img src="/avocado-icon.png" alt="No avocado" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+              </div>
               <p>no avocado found here</p>
               <span className="be-first-badge">Be the first!</span>
             </div>

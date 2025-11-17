@@ -58,9 +58,31 @@ export default function LeafletMap({ onMapReady }: LeafletMapProps) {
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
       >
+        {/* Map Styles - Choose Your Aesthetic! 
+        
+            🎨 CARTOONISH/ARTISTIC (Most Popular):
+            - Watercolor (painterly): https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg
+            - Toner (comic book style): https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}.png
+            - Toner Lite (lighter comic): https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}.png
+            
+            ✨ CLEAN/MINIMAL:
+            - Light (current): https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png
+            - Light No Labels: https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png
+            - Voyager: https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png
+            
+            🌙 DARK MODE:
+            - Dark All: https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png
+            - Dark No Labels: https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png
+            
+            🏞️ TERRAIN/NATURAL:
+            - Terrain: https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}.png
+            - Alidade Smooth: https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png
+            
+            Note: All these are free and don't require API keys!
+        */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
         
         <MapController center={center} />

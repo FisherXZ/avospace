@@ -176,7 +176,7 @@ export default function AvoStudyPage() {
           {/* Section Header */}
           <div className="section-header">
             <div>
-              <h2 className="section-title">Active Study Spots</h2>
+              <h2 className="section-title">Avo Study Spots</h2>
               <p className="section-subtitle">Check in to let others know you're studying</p>
             </div>
             <button 
