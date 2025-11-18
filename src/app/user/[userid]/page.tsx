@@ -14,6 +14,10 @@ import UserPost from '../../../../components/UserPost';
 // Type definition for user profile data structure
 interface UserProfile {
     username: string;
+    email?: string;
+    phoneNumber?: string;
+    phoneCountryCode?: string;
+    profileComplete?: boolean;
     bgColor: string;
     kao: string;
     accessory: string;
@@ -319,10 +323,7 @@ export default function UserProfile() {
                                         {userPosts.map((post, idx) => (
                                             <UserPost 
                                                 key={idx}
-                                                text={post.text}
-                                                uid={post.uid}
-                                                date={post.date}
-                                                likes={post.likes}
+                                                {...post}
                                             />
                                         ))}
                                     </div>

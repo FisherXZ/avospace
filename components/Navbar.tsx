@@ -19,9 +19,11 @@ export default function Navbar() {
     }, []);
 
     const handleLogoClick = (e: React.MouseEvent) => {
-        if (!user) {
-            e.preventDefault();
+        e.preventDefault();
+        if (user) {
+            router.push('/home');
         }
+        // If no user, do nothing (stay on current page)
     };
 
     const handleLogOut = async () => {
@@ -33,9 +35,9 @@ export default function Navbar() {
 
     return(
         <nav className="navbar navbar-expand-lg px-4 fixed-top navbar-shadow">
-            <Link href="/" className="navbar-brand d-flex align-items-center" onClick={handleLogoClick}>
+            <a href="#" className="navbar-brand d-flex align-items-center" onClick={handleLogoClick}>
                 <img src="/AvoSpace.png" className="img-fluid" alt="AvoSpace" />
-            </Link>
+            </a>
             {!isLoginPage && user && (
                 <div className="ms-auto d-flex align-items-center gap-2">
                     <Link

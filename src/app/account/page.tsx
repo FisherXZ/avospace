@@ -8,6 +8,7 @@ import PostComposer, { PostComposerRef } from '../../../components/PostComposer'
 import EditComposer, { EditComposerRef } from '../../../components/EditComposer';
 import FriendsPopup, { FriendsPopupRef } from '../../../components/FriendsPopup';
 import UserPost from '../../../components/UserPost';
+import { formatPhoneForDisplay } from '@/lib/validation';
 
 function SidebarHomeIcon() {
     return (
@@ -76,6 +77,9 @@ function SidebarEditIcon() {
 export default function Account() {
     const [ user, setUser ] = useState<User | null>(null);
     const [ username, setUsername ] = useState('this_person');
+    const [ email, setEmail ] = useState('');
+    const [ phoneNumber, setPhoneNumber ] = useState('');
+    const [ phoneCountryCode, setPhoneCountryCode ] = useState('');
     const [ bgColor, setBgColor ] = useState('#ffffff');
     const [ userPosts, setUserPosts ] = useState<DocumentData[]>([]);
     const router = useRouter();
@@ -109,6 +113,9 @@ export default function Account() {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     setUsername(data.username || 'this_person');
+                    setEmail(data.email || user.email || '');
+                    setPhoneNumber(data.phoneNumber || '');
+                    setPhoneCountryCode(data.phoneCountryCode || '');
                     setBgColor(data.bgColor || '#ffffff');
                     setKao(data.kao || '(^ᗜ^)');
                     
@@ -160,6 +167,8 @@ export default function Account() {
 
     const handleEditCreated = (userData: {
         username: string;
+        phoneNumber?: string;
+        phoneCountryCode?: string;
         accessory: string;
         leftSide: string;
         leftCheek: string;
@@ -172,6 +181,8 @@ export default function Account() {
     }) => {
         // Update local state with the new data
         setUsername(userData.username);
+        setPhoneNumber(userData.phoneNumber || '');
+        setPhoneCountryCode(userData.phoneCountryCode || '');
         setBgColor(userData.bgColor);
         // Reconstruct the kaomoji from the individual parts
         const newKao = `${userData.accessory}${userData.leftSide}${userData.leftCheek}${userData.leftEye}${userData.mouth}${userData.rightEye}${userData.rightCheek}${userData.rightSide}`;
@@ -255,6 +266,22 @@ export default function Account() {
 
                                 {/* Right - meta / actions */}
                                 <div className="col-12 col-md-8 px-4 d-flex flex-column justify-content-between">
+                                    <div className="mb-3">
+                                        {email && (
+                                            <div className="mb-2">
+                                                <small className="text-muted d-block" style={{ fontSize: '12px' }}>
+                                                    📧 {email}
+                                                </small>
+                                            </div>
+                                        )}
+                                        {phoneNumber && (
+                                            <div className="mb-2">
+                                                <small className="text-muted d-block" style={{ fontSize: '12px' }}>
+                                                    📱 {formatPhoneForDisplay(phoneNumber)}
+                                                </small>
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="d-flex gap-3 mb-3">
                                         <button
                                             className="btn btn-primary btn-sm"
@@ -294,9 +321,7 @@ export default function Account() {
                                     {userPosts.map((post, idx) => (
                                         <UserPost
                                             key={idx}
-                                            text={post.text}
-                                            uid={post.uid}
-                                            date={post.date}
+                                            {...post}
                                         />
                                     ))}
                                 </div>
@@ -313,6 +338,8 @@ export default function Account() {
             <EditComposer
                 ref={editComposerRef}
                 defaultUsername={username}
+                defaultPhoneNumber={phoneNumber}
+                defaultPhoneCountryCode={phoneCountryCode}
                 defaultAccessory={accessory}
                 defaultLeftSide={leftSide}
                 defaultLeftCheek={leftCheek}

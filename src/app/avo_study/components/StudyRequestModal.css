@@ -1,0 +1,42 @@
+/* Study Request Modal - Extends CheckInModal styles */
+
+.request-context-card {
+  background: linear-gradient(135deg, #F4F0B8 0%, #F4E5A8 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid #E8D898;
+}
+
+.context-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.context-icon {
+  font-size: 20px;
+}
+
+.context-spot {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4A6B4A;
+}
+
+.context-status {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.context-status strong {
+  color: #374151;
+  text-transform: capitalize;
+}
+
+.context-note {
+  font-style: italic;
+  color: #6B7280;
+}
+
