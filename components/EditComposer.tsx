@@ -163,7 +163,12 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
       const userDocRef = doc(db, 'users', auth.currentUser.uid);
       await updateDoc(userDocRef, userData);
       
-      onEditCreated?.(userData);
+      // Pass to callback with undefined instead of null for optional fields
+      onEditCreated?.({
+        ...userData,
+        phoneNumber: formattedPhone || undefined,
+        phoneCountryCode: countryCode || undefined,
+      });
       setIsOpen(false);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to update profile');
