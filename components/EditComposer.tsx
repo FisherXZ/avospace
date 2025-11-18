@@ -2,9 +2,7 @@
 import { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
-
-
-
+import { validatePhoneNumber, formatPhoneForDisplay, maskPhoneNumber } from '@/lib/validation';
 
 export type EditComposerRef = {
   open: () => void;
@@ -14,6 +12,8 @@ export type EditComposerRef = {
 type EditComposerProps = {
   onEditCreated?: (doc: {
     username: string;
+    phoneNumber?: string;
+    phoneCountryCode?: string;
     accessory: string;
     leftSide: string;
     leftCheek: string;
@@ -25,6 +25,8 @@ type EditComposerProps = {
     bgColor: string;
   }) => void;
   defaultUsername?: string;
+  defaultPhoneNumber?: string;
+  defaultPhoneCountryCode?: string;
   defaultAccessory?: string;
   defaultLeftSide?: string;
   defaultLeftCheek?: string;
@@ -37,16 +39,19 @@ type EditComposerProps = {
 };
 
 const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function EditComposer(
-  { onEditCreated, defaultUsername = 'this_person', defaultAccessory = '', defaultLeftSide = '(', defaultLeftCheek = '', 
+  { onEditCreated, defaultUsername = 'this_person', defaultPhoneNumber = '', defaultPhoneCountryCode = '', 
+    defaultAccessory = '', defaultLeftSide = '(', defaultLeftCheek = '', 
     defaultLeftEye = '^', defaultMouth = 'ᗜ', defaultRightEye = '^', defaultRightCheek = '', defaultRightSide = ')', defaultBgColor = '#ffffff'},
   ref
 ) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   
   // State variables
   const [username, setUsername] = useState(defaultUsername);
+  const [phoneNumber, setPhoneNumber] = useState(defaultPhoneNumber);
   const [bgColor, setBgColor] = useState(defaultBgColor);
   const [accessory, setAccessory] = useState(defaultAccessory);
   const [leftSide, setLeftSide] = useState(defaultLeftSide);
@@ -60,6 +65,7 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
   // Update state when props change
   useEffect(() => {
     setUsername(defaultUsername);
+    setPhoneNumber(defaultPhoneNumber);
     setBgColor(defaultBgColor);
     setAccessory(defaultAccessory);
     setLeftSide(defaultLeftSide);
@@ -69,7 +75,18 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
     setRightEye(defaultRightEye);
     setRightCheek(defaultRightCheek);
     setRightSide(defaultRightSide);
-  }, [defaultUsername, defaultBgColor, defaultAccessory, defaultLeftSide, defaultLeftCheek, defaultLeftEye, defaultMouth, defaultRightEye, defaultRightCheek, defaultRightSide]);
+  }, [defaultUsername, defaultPhoneNumber, defaultBgColor, defaultAccessory, defaultLeftSide, defaultLeftCheek, defaultLeftEye, defaultMouth, defaultRightEye, defaultRightCheek, defaultRightSide]);
+
+  // Validate phone number on change
+  useEffect(() => {
+    if (!phoneNumber || phoneNumber.trim() === '') {
+      setPhoneError(null);
+      return;
+    }
+    
+    const result = validatePhoneNumber(phoneNumber);
+    setPhoneError(result.error || null);
+  }, [phoneNumber]);
 
   const accessories = ['', '✧', '𝜗ৎ','⋆˚꩜｡','⋆˚࿔', 'ꉂ', 'ദി', '✧ദ്ദി', '❀༉', '♡', '⸜', '٩', 'و', '⸝', 'ᕙ','ᕗ'];
   const leftSides = ['(', '[', '𐔌', 'ʕ', '|', '૮'];
@@ -112,9 +129,25 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
       setIsSubmitting(true);
       setError(null);
       
+      // Validate phone if provided
+      let formattedPhone = '';
+      let countryCode = '';
+      if (phoneNumber && phoneNumber.trim()) {
+        const phoneValidation = validatePhoneNumber(phoneNumber);
+        if (!phoneValidation.valid) {
+          setError(phoneValidation.error || 'Invalid phone number');
+          setIsSubmitting(false);
+          return;
+        }
+        formattedPhone = phoneValidation.formatted || '';
+        countryCode = phoneValidation.countryCode || '';
+      }
+      
       const newKao = `${accessory}${leftSide}${leftCheek}${leftEye}${mouth}${rightEye}${rightCheek}${rightSide}`;
       const userData = {
         username: username.trim(),
+        phoneNumber: formattedPhone || null,
+        phoneCountryCode: countryCode || null,
         accessory,
         leftSide,
         leftCheek,
@@ -173,6 +206,26 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+          <small className="form-text text-muted">This cannot be changed later</small>
+        </div>
+        
+        <div className="mb-3">
+          <label>Phone Number <span className="text-muted">(optional)</span></label>
+          <input 
+            className={`form-control ${phoneError ? 'is-invalid' : ''}`}
+            type="tel"
+            placeholder="+1 (415) 555-1234"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          {phoneError && (
+            <div className="invalid-feedback">{phoneError}</div>
+          )}
+          {!phoneError && (
+            <small className="form-text text-muted">
+              📱 For study buddy notifications (kept private)
+            </small>
+          )}
         </div>
         
         {/* Live Kaomoji Preview */}

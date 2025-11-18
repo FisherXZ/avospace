@@ -1,0 +1,252 @@
+/* Check-In Post Component */
+
+.checkin-post-card {
+  background: white;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.checkin-post-card:hover {
+  border-color: #5B9B7E;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* User Header */
+.checkin-post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.checkin-post-kao {
+  font-size: 32px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.checkin-post-header:hover .checkin-post-kao {
+  transform: scale(1.1);
+}
+
+.checkin-post-user-info {
+  flex: 1;
+}
+
+.checkin-post-username {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 2px;
+}
+
+.checkin-post-date {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.checkin-expired-badge {
+  background: #E5E5E5;
+  color: #6B7280;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Content */
+.checkin-post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Info Row - Location + Status + Button */
+.checkin-post-info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkin-post-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-icon {
+  font-size: 20px;
+}
+
+.location-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #4A6B4A;
+}
+
+.checkin-post-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.status-badge-post {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.status-badge-post.status-coral {
+  background: #E89B8E;
+}
+
+.status-badge-post.status-sky-blue {
+  background: #A8C8E8;
+}
+
+.status-badge-post.status-yellow {
+  background: #F4F0B8;
+  color: #374151;
+}
+
+.status-badge-post.status-red {
+  background: #E88E8E;
+}
+
+.status-badge-post.status-purple {
+  background: #B8A8D8;
+}
+
+.status-badge-post.status-orange {
+  background: #F4B88E;
+}
+
+.status-badge-post.status-green {
+  background: #7A9A7A;
+}
+
+.checkin-post-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  border-left: 3px solid #5B9B7E;
+}
+
+.note-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.note-text {
+  font-size: 15px;
+  color: #374151;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Send Request Button - Compact Inline Version */
+.send-request-button {
+  background: #5B9B7E;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.send-request-button:hover {
+  background: #4A8A6D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(91, 155, 126, 0.3);
+}
+
+.send-request-button:active {
+  transform: translateY(0);
+}
+
+.button-icon {
+  font-size: 14px;
+}
+
+.checkin-expired-message {
+  margin-top: 8px;
+  padding: 12px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  text-align: center;
+  color: #6B7280;
+  font-size: 14px;
+}
+
+/* Loading */
+.checkin-post-loading {
+  padding: 20px;
+  text-align: center;
+  color: #6B7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checkin-post-card {
+    padding: 16px;
+    margin: 12px 0;
+  }
+
+  .location-name {
+    font-size: 16px;
+  }
+
+  .checkin-post-info-row {
+    gap: 8px;
+  }
+
+  .send-request-button {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  .button-icon {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkin-post-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .send-request-button {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
+}
+

@@ -16,17 +16,11 @@ export interface StudySpot {
 
 /**
  * Check-In Status
- * Primary: open, solo, break
- * Secondary: sos, allnighter, procrastinating, cram
  */
 export type CheckInStatus = 
   | 'open'          // Open to study together
   | 'solo'          // Solo mode
-  | 'break'         // On a break
-  | 'sos'           // 🆘 SOS - brain not working
-  | 'allnighter'    // 🌙 All-nighter energy
-  | 'procrastinating' // ☕ Procrastinating
-  | 'cram';         // 📚 Cram mode activated
+  | 'break';        // On a break
 
 /**
  * Study Request Status
@@ -54,15 +48,48 @@ export interface StudyRequest {
   id: string;                    // Firestore document ID
   fromUserId: string;            // Sender user ID
   toUserId: string;              // Recipient user ID
+  checkInId: string;             // Reference to the check-in that prompted this request
+  spotId: string;                // Study spot where request was sent (for context)
   message: string;               // Free-form message (500 char max)
   status: StudyRequestStatus;    // Request lifecycle status
   sentAt: Timestamp;             // When request was sent
+  readAt?: Timestamp;            // When recipient read the request
 }
 
 /**
  * No changes to User type for MVP
  * We'll use existing fields: uid, username, kao
  */
+
+/**
+ * Post Types
+ */
+export type PostType = 'regular' | 'checkin';
+
+/**
+ * Base Post (existing posts collection)
+ */
+export interface Post {
+  id?: string;                   // Firestore document ID
+  text: string;                  // Post content
+  date: string;                  // Date string (e.g., "11/18/2024")
+  likes: number;                 // Like count
+  uid: string;                   // Author user ID
+  type?: PostType;               // Post type (default: 'regular')
+}
+
+/**
+ * Check-In Post (special post type created when checking in)
+ */
+export interface CheckInPost extends Post {
+  type: 'checkin';
+  checkInId: string;             // Reference to check_ins document
+  spotId: string;                // Study spot ID
+  spotName: string;              // Study spot name (denormalized for display)
+  status: CheckInStatus;         // Study status
+  statusNote?: string;           // Optional status note
+  expiresAt: Timestamp;          // When check-in expires
+}
 
 /**
  * Check-In with populated user and spot data
@@ -171,17 +198,9 @@ export const CHAR_LIMITS = {
 /**
  * Status option configurations
  */
-export const STATUS_OPTIONS = {
-  PRIMARY: [
-    { value: 'open' as const, label: 'Open to study together', emoji: '🤝', description: 'Available to study together' },
-    { value: 'solo' as const, label: 'Solo mode', emoji: '🎧', description: 'Focused solo work' },
-    { value: 'break' as const, label: 'On a break', emoji: '☕', description: 'Taking a break' },
-  ],
-  SECONDARY: [
-    { value: 'sos' as const, label: 'SOS - brain not working', emoji: '🆘', description: 'Need help' },
-    { value: 'allnighter' as const, label: 'All-nighter energy', emoji: '🌙', description: 'Late night crew' },
-    { value: 'procrastinating' as const, label: 'Procrastinating', emoji: '☕', description: 'Just vibing' },
-    { value: 'cram' as const, label: 'Cram mode activated', emoji: '📚', description: 'Very focused' },
-  ],
-} as const;
+export const STATUS_OPTIONS = [
+  { value: 'open' as const, label: 'Open to study together', emoji: '🤝', description: 'Available to study together' },
+  { value: 'solo' as const, label: 'Solo mode', emoji: '🎧', description: 'Focused solo work' },
+  { value: 'break' as const, label: 'On a break', emoji: '☕', description: 'Taking a break' },
+] as const;
 

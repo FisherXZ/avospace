@@ -14,10 +14,6 @@ function getStatusInfo(status: CheckInStatus) {
     'open': { color: 'coral', label: 'Open', emoji: '🤝' },
     'solo': { color: 'sky-blue', label: 'Solo', emoji: '🎧' },
     'break': { color: 'yellow', label: 'Break', emoji: '☕' },
-    'sos': { color: 'red', label: 'SOS', emoji: '🆘' },
-    'allnighter': { color: 'purple', label: 'All-nighter', emoji: '🌙' },
-    'procrastinating': { color: 'orange', label: 'Procrastinating', emoji: '☕' },
-    'cram': { color: 'green', label: 'Cram', emoji: '📚' },
   };
   return statusMap[status] || statusMap['solo'];
 }

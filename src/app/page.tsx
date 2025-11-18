@@ -1,31 +1,149 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, updateProfile } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { validateUsername, validateUsernameFormat, validatePhoneNumber, validateEmail } from '@/lib/validation';
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [usernameAvailable, setUsernameAvailable] = useState(false);
+  const [checkingUsername, setCheckingUsername] = useState(false);
 
   const router = useRouter();
+
+  // Real-time username validation (debounced)
+  useEffect(() => {
+    if (isLogin || !username) {
+      setUsernameError(null);
+      setUsernameAvailable(false);
+      return;
+    }
+
+    // Quick format check first
+    const formatResult = validateUsernameFormat(username);
+    if (!formatResult.valid) {
+      setUsernameError(formatResult.error || null);
+      setUsernameAvailable(false);
+      return;
+    }
+
+    // Debounced uniqueness check
+    const timer = setTimeout(async () => {
+      setCheckingUsername(true);
+      try {
+        const result = await validateUsername(username);
+        setUsernameError(result.error || null);
+        setUsernameAvailable(result.valid);
+      } catch (error) {
+        setUsernameError('Could not verify username');
+        setUsernameAvailable(false);
+      } finally {
+        setCheckingUsername(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [username, isLogin]);
+
+  // Phone number validation
+  useEffect(() => {
+    if (isLogin || !phoneNumber) {
+      setPhoneError(null);
+      return;
+    }
+
+    const result = validatePhoneNumber(phoneNumber);
+    if (!result.valid) {
+      setPhoneError(result.error || null);
+    } else {
+      setPhoneError(null);
+    }
+  }, [phoneNumber, isLogin]);
 
   const handleAuth = async () => {
     try {
       setError(null);
+      
       if (isLogin) {
+        // Login flow - just email and password
         await signInWithEmailAndPassword(auth, email, password);
         router.push('/account');
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-        if (auth.currentUser != null) {
-          await setDoc(doc(db, "users", auth.currentUser.uid), {
+        // Signup flow - validate all fields
+        
+        // Validate email
+        const emailValidation = validateEmail(email);
+        if (!emailValidation.valid) {
+          setError(emailValidation.error || 'Invalid email');
+          return;
+        }
+
+        // Validate username
+        if (!username.trim()) {
+          setError('Username is required');
+          return;
+        }
+
+        const usernameValidation = await validateUsername(username);
+        if (!usernameValidation.valid) {
+          setError(usernameValidation.error || 'Invalid username');
+          return;
+        }
+
+        // Validate phone (if provided)
+        let formattedPhone = '';
+        let countryCode = '';
+        if (phoneNumber.trim()) {
+          const phoneValidation = validatePhoneNumber(phoneNumber);
+          if (!phoneValidation.valid) {
+            setError(phoneValidation.error || 'Invalid phone number');
+            return;
+          }
+          formattedPhone = phoneValidation.formatted || '';
+          countryCode = phoneValidation.countryCode || '';
+        }
+
+        // Create auth account
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        
+        if (userCredential.user) {
+          // Create user profile document
+          await setDoc(doc(db, "users", userCredential.user.uid), {
+            // Identity
+            email: email.toLowerCase().trim(),
+            username: username.toLowerCase().trim(),
+            
+            // Contact
+            phoneNumber: formattedPhone || null,
+            phoneCountryCode: countryCode || null,
+            phoneVerified: false,
+            
+            // Profile Status
+            profileComplete: true,
+            createdAt: Timestamp.now(),
+            
+            // Appearance (defaults)
             bgColor: "#ffffff",
             kao: "(^ᗜ^)",
-            username: email,
+            accessory: '',
+            leftSide: '(',
+            leftCheek: '',
+            leftEye: '^',
+            mouth: 'ᗜ',
+            rightEye: '^',
+            rightCheek: '',
+            rightSide: ')',
+            
+            // Social
             friends: []
           });
         }
@@ -33,6 +151,7 @@ export default function AuthPage() {
         router.push('/account');
       }
     } catch (err: any) {
+      console.error('Auth error:', err);
       setError(err?.message || 'Something went wrong. Please try again.');
     }
   };
@@ -113,6 +232,70 @@ export default function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
+            {!isLogin && (
+              <>
+                <div className="mb-3">
+                  <label className="form-label mb-1" style={{ fontSize: '13px' }}>
+                    Username <span className="text-danger">*</span>
+                  </label>
+                  <div className="position-relative">
+                    <input
+                      className={`form-control ${usernameError ? 'is-invalid' : usernameAvailable ? 'is-valid' : ''}`}
+                      type="text"
+                      placeholder="your_username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                    {checkingUsername && (
+                      <div className="position-absolute top-50 end-0 translate-middle-y me-2">
+                        <div className="spinner-border spinner-border-sm text-secondary" role="status">
+                          <span className="visually-hidden">Checking...</span>
+                        </div>
+                      </div>
+                    )}
+                    {usernameAvailable && !checkingUsername && (
+                      <div className="position-absolute top-50 end-0 translate-middle-y me-2">
+                        <span className="text-success">✓</span>
+                      </div>
+                    )}
+                  </div>
+                  {usernameError && (
+                    <div className="invalid-feedback d-block" style={{ fontSize: '12px' }}>
+                      {usernameError}
+                    </div>
+                  )}
+                  {!usernameError && !checkingUsername && (
+                    <div className="form-text" style={{ fontSize: '11px' }}>
+                      💡 3-20 characters, letters, numbers and underscores only
+                    </div>
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label mb-1" style={{ fontSize: '13px' }}>
+                    Phone Number <span className="text-muted">(optional)</span>
+                  </label>
+                  <input
+                    className={`form-control ${phoneError ? 'is-invalid' : ''}`}
+                    type="tel"
+                    placeholder="+1 (415) 555-1234"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                  {phoneError && (
+                    <div className="invalid-feedback d-block" style={{ fontSize: '12px' }}>
+                      {phoneError}
+                    </div>
+                  )}
+                  {!phoneError && (
+                    <div className="form-text" style={{ fontSize: '11px' }}>
+                      📱 For study buddy notifications (kept private)
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
 
             <div className="mb-3">
               <label className="form-label mb-1" style={{ fontSize: '13px' }}>

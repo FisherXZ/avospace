@@ -301,7 +301,7 @@ export default function Home() {
                 {error && <div className="text-danger mb-2">{error}</div>}
                 {!loading && !error && posts.map((doc, idx) => (
                   <div key={idx} className="mb-3">
-                    <Post text={doc.text} uid={doc.uid || ''} date={doc.date} />
+                    <Post {...doc} />
                   </div>
                 ))}
               </>
@@ -318,7 +318,7 @@ export default function Home() {
                 )}
                 {!friendsLoading && friendsPosts.length > 0 && friendsPosts.map((doc, idx) => (
                   <div key={idx} className="mb-3">
-                    <Post text={doc.text} uid={doc.uid || ''} date={doc.date} />
+                    <Post {...doc} />
                   </div>
                 ))}
               </>

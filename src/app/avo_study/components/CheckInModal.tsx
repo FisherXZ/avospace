@@ -91,7 +91,8 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
         Date.now() + duration * 60 * 1000
       );
 
-      await addDoc(collection(db, 'check_ins'), {
+      // 1. Create check-in document
+      const checkInRef = await addDoc(collection(db, 'check_ins'), {
         userId: auth.currentUser.uid,
         spotId: spot.id,
         status,
@@ -99,6 +100,23 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
         startedAt: now,
         expiresAt,
         isActive: true
+      });
+
+      // 2. Create check-in post (appears in social feed)
+      const dateNow = new Date();
+      await addDoc(collection(db, 'posts'), {
+        type: 'checkin',
+        text: `Checked in to ${spot.name}`, // Fallback text
+        date: `${dateNow.getMonth() + 1}/${dateNow.getDate()}/${dateNow.getFullYear()}`,
+        likes: 0,
+        uid: auth.currentUser.uid,
+        // Check-in specific fields
+        checkInId: checkInRef.id,
+        spotId: spot.id,
+        spotName: spot.name,
+        status,
+        statusNote: statusNote.trim() || null,
+        expiresAt
       });
 
       // Success - reset and close
@@ -200,42 +218,21 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
                 </label>
                 
                 <div className="status-picker">
-                  {/* Primary Status Options (Full Height) */}
-                  <div className="status-picker-primary">
-                    {STATUS_OPTIONS.PRIMARY.map(option => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={`status-button status-button-primary ${status === option.value ? 'active' : ''}`}
-                        onClick={() => setStatus(option.value)}
-                        disabled={loading}
-                      >
-                        <div className="status-button-icon">{option.emoji}</div>
-                        <div className="status-button-content">
-                          <div className="status-button-title">{option.label}</div>
-                          <div className="status-button-desc">{option.description}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Secondary Status Options (2/3 Height) */}
-                  <div className="status-picker-secondary">
-                    {STATUS_OPTIONS.SECONDARY.map(option => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={`status-button status-button-secondary ${status === option.value ? 'active' : ''}`}
-                        onClick={() => setStatus(option.value)}
-                        disabled={loading}
-                      >
-                        <div className="status-button-icon-small">{option.emoji}</div>
-                        <div className="status-button-content-small">
-                          <div className="status-button-title-small">{option.label}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                  {STATUS_OPTIONS.map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={`status-button ${status === option.value ? 'active' : ''}`}
+                      onClick={() => setStatus(option.value)}
+                      disabled={loading}
+                    >
+                      <div className="status-button-icon">{option.emoji}</div>
+                      <div className="status-button-content">
+                        <div className="status-button-title">{option.label}</div>
+                        <div className="status-button-desc">{option.description}</div>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
 

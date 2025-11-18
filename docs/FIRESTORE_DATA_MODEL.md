@@ -192,9 +192,9 @@ firestore (database)
 
 ---
 
-### 4️⃣ users (existing)
+### 4️⃣ users (enhanced)
 
-**Purpose**: User profiles (no changes for MVP)  
+**Purpose**: User profiles with enhanced identity and contact info  
 **Total Documents**: Variable  
 **Created By**: User registration  
 **Updated By**: User (own profile only)
@@ -203,17 +203,50 @@ firestore (database)
 {
   // Document ID: Firebase Auth UID
   
-  username: string,         // Display name
-  kao: string,             // Kaomoji avatar
-  bgColor: string,         // Profile background color
-  friends: string[]        // Array of user IDs (existing feature)
+  // ===== IDENTITY =====
+  email: string,                // User's email (private, from Firebase Auth)
+  username: string,             // Display name (unique, 3-20 chars, alphanumeric + underscore)
+  
+  // ===== CONTACT =====
+  phoneNumber?: string,         // Optional phone (E.164 format: +14155551234)
+  phoneCountryCode?: string,    // E.g., "+1" (for display purposes)
+  phoneVerified: boolean,       // Whether phone has been verified (default: false)
+  
+  // ===== PROFILE STATUS =====
+  profileComplete: boolean,     // Has completed onboarding/setup
+  createdAt: Timestamp,         // Account creation time
+  
+  // ===== APPEARANCE =====
+  kao: string,                  // Kaomoji avatar (composed string)
+  bgColor: string,              // Profile background color (#hex)
+  accessory: string,            // Kaomoji part
+  leftSide: string,             // Kaomoji part
+  leftCheek: string,            // Kaomoji part
+  leftEye: string,              // Kaomoji part
+  mouth: string,                // Kaomoji part
+  rightEye: string,             // Kaomoji part
+  rightCheek: string,           // Kaomoji part
+  rightSide: string,            // Kaomoji part
+  
+  // ===== SOCIAL =====
+  friends: string[]             // Array of user IDs (existing feature)
 }
 ```
 
+**Storage**: ~400 bytes per document  
+**Indexes**: 
+- Simple: `username` (for uniqueness checks, case-insensitive)
+
+**Privacy Levels**:
+- 🌐 **Public** (visible to all authenticated users): `username`, `kao`, `bgColor`, `profileComplete`, `friends`
+- 🔒 **Private** (owner only): `email`, `phoneNumber`, `phoneCountryCode`, `phoneVerified`
+
 **Used By Avo Study**:
-- ✅ `username` - Display in check-in roster
+- ✅ `username` - Display in check-in roster, posts, profiles
 - ✅ `kao` - Display avatar in check-in roster
-- ❌ Other fields not used
+- ✅ `email` - User identification (private)
+- 🆕 `phoneNumber` - Future SMS notifications (private)
+- ❌ Other fields for profile customization
 
 ---
 

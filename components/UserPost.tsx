@@ -1,8 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import CheckInPost from '@/app/avo_study/components/CheckInPost';
+import { CheckInPost as CheckInPostType } from '@/types/study';
 
-export default function UserPost({ text="", uid="", date="4/11/2025", likes=0 }) {
+export default function UserPost({ text="", uid="", date="4/11/2025", likes=0, type, checkInId, spotId, spotName, status, statusNote, expiresAt }: any) {
+    // If this is a check-in post, render CheckInPost component
+    if (type === 'checkin') {
+        return <CheckInPost post={{
+            text,
+            uid,
+            date,
+            likes,
+            type: 'checkin',
+            checkInId,
+            spotId,
+            spotName,
+            status,
+            statusNote,
+            expiresAt
+        } as CheckInPostType} />;
+    }
+    
+    // Otherwise, render regular UserPost (existing code below)
     const [loading, setLoading] = useState(true);
     const [kao, setKao] = useState<string>('(^ᗜ^)');
     const [username, setUsername] = useState<string>('Unknown User');

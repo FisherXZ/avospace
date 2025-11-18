@@ -3,44 +3,109 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // ============================================
-    // ⚠️ DEVELOPMENT MODE - SIMPLIFIED RULES ⚠️
-    // ============================================
-    // All authenticated users have full read/write access
-    // TODO: Reimplement proper security rules before production
+    // HELPER FUNCTIONS
     // ============================================
     
-    // Helper function - check if user is authenticated
+    // Check if user is authenticated
     function isSignedIn() {
       return request.auth != null;
     }
     
+    // Check if user owns the resource
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Validate username format
+    function isValidUsername(username) {
+      return username is string 
+        && username.size() >= 3 
+        && username.size() <= 20
+        && username.matches('^[a-zA-Z0-9_]+$');
+    }
+    
     // ============================================
-    // DEV MODE: ALL COLLECTIONS - FULL ACCESS
+    // USERS COLLECTION - ENHANCED PRIVACY
     // ============================================
-    
-    // Study spots - Allow authenticated users to read/write
-    match /study_spots/{spotId} {
-      allow read, write: if isSignedIn();
-    }
-    
-    // Check-ins - Allow authenticated users full access
-    match /check_ins/{checkInId} {
-      allow read, write: if isSignedIn();
-    }
-    
-    // Study requests - Allow authenticated users full access
-    match /study_requests/{requestId} {
-      allow read, write: if isSignedIn();
-    }
-    
-    // Posts - Allow authenticated users full access
-    match /posts/{postId} {
-      allow read, write: if isSignedIn();
-    }
-    
-    // Users - Allow authenticated users full access
     match /users/{userId} {
-      allow read, write: if isSignedIn();
+      // Anyone can read user profiles (needed for username validation during registration)
+      // Sensitive fields (email, phone) are filtered client-side
+      // This allows username uniqueness checks before account creation
+      allow read: if true;
+      
+      // Only owner can create their own profile
+      allow create: if isOwner(userId) 
+        && request.resource.data.keys().hasAll(['username', 'email', 'profileComplete'])
+        && isValidUsername(request.resource.data.username);
+      
+      // Only owner can update their own profile
+      allow update: if isOwner(userId);
+      
+      // Only owner can delete their own profile
+      allow delete: if isOwner(userId);
+    }
+    
+    // ============================================
+    // STUDY SPOTS - READ ONLY (ADMIN MANAGED)
+    // ============================================
+    match /study_spots/{spotId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Admin only via Firebase Console
+    }
+    
+    // ============================================
+    // CHECK-INS - USER MANAGED
+    // ============================================
+    match /check_ins/{checkInId} {
+      // Anyone can read active check-ins (for discovery)
+      allow read: if isSignedIn();
+      
+      // Anyone can create a check-in
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid;
+      
+      // Only owner can update/delete their check-ins
+      allow update, delete: if isSignedIn() 
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    // ============================================
+    // STUDY REQUESTS - SENDER/RECIPIENT ONLY
+    // ============================================
+    match /study_requests/{requestId} {
+      // Only sender and recipient can read
+      allow read: if isSignedIn() 
+        && (resource.data.fromUserId == request.auth.uid 
+         || resource.data.toUserId == request.auth.uid);
+      
+      // Anyone can create a request (as sender)
+      allow create: if isSignedIn()
+        && request.resource.data.fromUserId == request.auth.uid;
+      
+      // Only recipient can update (accept/decline)
+      allow update: if isSignedIn() 
+        && resource.data.toUserId == request.auth.uid;
+      
+      // Sender or recipient can delete
+      allow delete: if isSignedIn() 
+        && (resource.data.fromUserId == request.auth.uid 
+         || resource.data.toUserId == request.auth.uid);
+    }
+    
+    // ============================================
+    // POSTS - USER OWNED CONTENT
+    // ============================================
+    match /posts/{postId} {
+      // Anyone authenticated can read posts
+      allow read: if isSignedIn();
+      
+      // Anyone can create posts
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid;
+      
+      // Only owner can update/delete their posts
+      allow update, delete: if isSignedIn() 
+        && resource.data.uid == request.auth.uid;
     }
   }
 }
