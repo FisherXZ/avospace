@@ -4,10 +4,8 @@ import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, DocumentData, query, collection, getDocs, where } from "firebase/firestore";
-import PostComposer, { PostComposerRef } from '../../../components/PostComposer';
 import EditComposer, { EditComposerRef } from '../../../components/EditComposer';
-import FriendsPopup, { FriendsPopupRef } from '../../../components/FriendsPopup';
-import UserPost from '../../../components/UserPost';
+import Post from '../../../components/Post';
 import { formatPhoneForDisplay } from '@/lib/validation';
 
 function SidebarHomeIcon() {
@@ -20,30 +18,6 @@ function SidebarHomeIcon() {
                 strokeWidth="1.7"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
-
-function SidebarPlusIcon() {
-    return (
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-            <rect
-                x="4"
-                y="4"
-                width="16"
-                height="16"
-                rx="4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-            />
-            <path
-                d="M12 8v8M8 12h8"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
             />
         </svg>
     );
@@ -69,6 +43,8 @@ function SidebarEditIcon() {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     );
@@ -83,9 +59,7 @@ export default function Account() {
     const [ bgColor, setBgColor ] = useState('#ffffff');
     const [ userPosts, setUserPosts ] = useState<DocumentData[]>([]);
     const router = useRouter();
-    const composerRef = useRef<PostComposerRef | null>(null);
     const editComposerRef = useRef<EditComposerRef | null>(null);
-    const friendsPopupRef = useRef<FriendsPopupRef | null>(null);
     
     // Kaomoji part states
     const [ accessory, setAccessory ] = useState('');
@@ -213,15 +187,6 @@ export default function Account() {
                     </li>
                     <li
                         className="app-sidebar-item"
-                        onClick={() => composerRef.current?.open()}
-                    >
-                        <span className="app-sidebar-icon">
-                            <SidebarPlusIcon />
-                        </span>
-                        <span className="app-sidebar-label">Post</span>
-                    </li>
-                    <li
-                        className="app-sidebar-item"
                         onClick={() => editComposerRef.current?.open()}
                     >
                         <span className="app-sidebar-icon">
@@ -233,94 +198,66 @@ export default function Account() {
             </aside>
 
             {/* Main content */}
-            <div
-                className="page-container-wide"
-                style={{ marginLeft: '0', paddingLeft: '16px', paddingRight: '16px' }}
-            >
+            <div className="page-container-wide">
                 <div className="d-flex justify-content-center">
                     <section style={{ width: '100%', maxWidth: 900 }}>
-                        <div
-                            className="card-bordered mb-4"
-                            style={{ background: bgColor, padding: '32px 24px' }}
-                        >
-                            <div className="row">
-                                {/* Left - avatar & username */}
-                                <div className="col-12 col-md-4 px-4 mb-4 mb-md-0">
-                                    <div className="d-flex flex-column gap-3">
-                                        <div style={{ fontSize: '4rem', whiteSpace: 'nowrap', overflow: 'visible' }}>
-                                            {kao}
-                                        </div>
-                                        <h2 className="mb-2" style={{ wordWrap: 'break-word' }}>
-                                            {username}
-                                        </h2>
-                                        <button
-                                            className="btn btn-link p-0 align-self-start"
-                                            style={{ textDecoration: 'none', fontSize: '1.5rem' }}
-                                            onClick={() => friendsPopupRef.current?.open()}
-                                            title="Your Friends"
-                                        >
-                                            𖠋♡𖠋
-                                        </button>
+                        {/* Hero Card */}
+                        <div className="card-elevated mb-5 overflow-hidden">
+                            <div 
+                                className="p-5 d-flex flex-column align-items-center justify-content-center text-center position-relative"
+                                style={{ 
+                                    background: bgColor, 
+                                    minHeight: '300px',
+                                    transition: 'background 0.5s ease'
+                                }}
+                            >
+                                <div className="position-relative z-1">
+                                    <div 
+                                        className="mb-3"
+                                        style={{ 
+                                            fontSize: '6rem', 
+                                            lineHeight: 1,
+                                            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))'
+                                        }}
+                                    >
+                                        {kao}
+                                    </div>
+                                    <h1 className="display-6 fw-bold mb-2" style={{ textShadow: '0 2px 10px rgba(255,255,255,0.5)' }}>
+                                        {username}
+                                    </h1>
+                                    <div className="d-flex justify-content-center gap-3 text-muted-soft" style={{ background: 'rgba(255,255,255,0.5)', padding: '4px 12px', borderRadius: '20px', backdropFilter: 'blur(4px)' }}>
+                                        {email && <span>📧 {email}</span>}
+                                        {phoneNumber && <span>📱 {formatPhoneForDisplay(phoneNumber)}</span>}
                                     </div>
                                 </div>
-
-                                {/* Right - meta / actions */}
-                                <div className="col-12 col-md-8 px-4 d-flex flex-column justify-content-between">
-                                    <div className="mb-3">
-                                        {email && (
-                                            <div className="mb-2">
-                                                <small className="text-muted d-block" style={{ fontSize: '12px' }}>
-                                                    📧 {email}
-                                                </small>
-                                            </div>
-                                        )}
-                                        {phoneNumber && (
-                                            <div className="mb-2">
-                                                <small className="text-muted d-block" style={{ fontSize: '12px' }}>
-                                                    📱 {formatPhoneForDisplay(phoneNumber)}
-                                                </small>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="d-flex gap-3 mb-3">
-                                        <button
-                                            className="btn btn-primary btn-sm"
-                                            onClick={() => editComposerRef.current?.open()}
-                                        >
-                                            Edit Profile
-                                        </button>
-                                        <button
-                                            className="btn btn-outline-secondary btn-sm"
-                                            onClick={() => composerRef.current?.open()}
-                                        >
-                                            New Post
-                                        </button>
-                                    </div>
-                                    <p className="text-muted mb-0" style={{ fontSize: '13px' }}>
-                                        Customize your kaomoji, colors, and share posts with your friends.
-                                    </p>
+                                
+                                {/* Actions */}
+                                <div className="position-absolute top-0 end-0 m-4">
+                                    <button
+                                        className="btn btn-light shadow-sm rounded-pill px-4"
+                                        onClick={() => editComposerRef.current?.open()}
+                                    >
+                                        ✏️ Edit Profile
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <div className="px-1">
-                            <h4 className="mb-3">Your Posts</h4>
+                            <h4 className="mb-4 fw-bold">Your Posts</h4>
                             {userPosts.length === 0 ? (
-                                <p className="text-muted">
-                                    No posts yet.{' '}
-                                    <button
-                                        className="btn btn-link p-0"
-                                        onClick={() => composerRef.current?.open()}
-                                        style={{ textDecoration: 'underline' }}
-                                    >
-                                        Create your first post!
-                                    </button>
-                                </p>
+                                <div className="text-center py-5 bg-light rounded-4">
+                                    <p className="fs-1 mb-3">📝</p>
+                                    <p className="text-muted mb-0">
+                                        No posts yet. Check in at study spots to share your activity!
+                                    </p>
+                                </div>
                             ) : (
                                 <div>
                                     {userPosts.map((post, idx) => (
-                                        <UserPost
+                                        <Post
                                             key={idx}
+                                            clickable={false}
                                             {...post}
                                         />
                                     ))}
@@ -331,10 +268,6 @@ export default function Account() {
                 </div>
             </div>
 
-            <PostComposer
-                ref={composerRef}
-                onPostCreated={(doc) => setUserPosts((prev) => [doc, ...prev])}
-            />
             <EditComposer
                 ref={editComposerRef}
                 defaultUsername={username}
@@ -350,10 +283,6 @@ export default function Account() {
                 defaultRightSide={rightSide}
                 defaultBgColor={bgColor}
                 onEditCreated={handleEditCreated}
-            />
-            <FriendsPopup
-                ref={friendsPopupRef}
-                currentUser={user}
             />
         </main>
     );

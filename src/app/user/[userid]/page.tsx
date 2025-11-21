@@ -1,15 +1,91 @@
 'use client';
 // React hooks and Next.js navigation imports
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 // Firebase authentication and Firestore database imports
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, DocumentData, query, orderBy, collection, getDocs, where } from "firebase/firestore";
-// Component imports for friends popups and user posts
-import FriendsPopup, { FriendsPopupRef } from '../../../../components/FriendsPopup';
-import UserFriendsPopup, { UserFriendsPopupRef } from '../../../../components/UserFriendsPopup';
-import UserPost from '../../../../components/UserPost';
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, DocumentData, query, collection, getDocs, where } from "firebase/firestore";
+// Component imports
+import Post from '../../../../components/Post';
+
+// Sidebar Icons (Standardized)
+function SidebarHomeIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5V14h-5V21H5a1 1 0 0 1-1-1v-9.5z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SidebarUsersIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M16.5 11a3.5 3.5 0 1 0-2.96-5.33"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.5 13a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 20.25c.8-1.8 2.64-3.25 4.5-3.25s3.7 1.45 4.5 3.25"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.5 17c2 0 3.8 1.2 4.5 3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SidebarStudyIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4 6.5C4 5.67 4.67 5 5.5 5h8.5a3 3 0 0 1 3 3v10.5l-4.25-2.25L8.5 18.5 4 16.25V6.5z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 9h4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 // Type definition for user profile data structure
 interface UserProfile {
@@ -31,7 +107,7 @@ interface UserProfile {
 }
 
 export default function UserProfile() {
-    // State management: track current logged-in user, profile being viewed, posts, loading states, and friendship status
+    // State management
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [userPosts, setUserPosts] = useState<DocumentData[]>([]);
@@ -39,15 +115,12 @@ export default function UserProfile() {
     const [error, setError] = useState<string | null>(null);
     const [isFriend, setIsFriend] = useState(false);
     const [isLoadingFriend, setIsLoadingFriend] = useState(false);
-    // Router and URL params: get userId from route to determine which profile to display
+    
     const router = useRouter();
     const params = useParams();
-    const userId = params.userid as string; // Changed from userId to userid to match route parameter
-    // Refs for controlling friends popup modals
-    const friendsPopupRef = useRef<FriendsPopupRef | null>(null);
-    const userFriendsPopupRef = useRef<UserFriendsPopupRef | null>(null);
+    const userId = params.userid as string;
 
-    // Monitor Firebase authentication state: update currentUser when login status changes
+    // Monitor Firebase authentication state
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
             setCurrentUser(firebaseUser);
@@ -55,7 +128,7 @@ export default function UserProfile() {
         return () => unsubscribe();
     }, []);
 
-    // Fetch the profile data for the user being viewed: username, kaomoji parts, background color
+    // Fetch the profile data
     useEffect(() => {
         const fetchUserProfile = async () => {
             if (!userId) return;
@@ -99,7 +172,7 @@ export default function UserProfile() {
         fetchUserProfile();
     }, [userId]);
 
-    // Fetch all posts created by the viewed user, sorted by date (newest first)
+    // Fetch user posts
     useEffect(() => {
         const fetchPosts = async () => {
             if (!userId) return;
@@ -110,11 +183,9 @@ export default function UserProfile() {
                 
                 // Sort posts by date manually (newest first)
                 posts.sort((a, b) => {
-                    // Handle different date formats
                     const dateA = new Date(a.date);
                     const dateB = new Date(b.date);
                     
-                    // If dates are invalid, put them at the end
                     if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
                     if (isNaN(dateA.getTime())) return 1;
                     if (isNaN(dateB.getTime())) return -1;
@@ -131,7 +202,7 @@ export default function UserProfile() {
         fetchPosts();
     }, [userId]);
 
-    // Check if the current logged-in user is friends with the profile being viewed
+    // Check friendship status
     useEffect(() => {
         const checkFriendship = async () => {
             if (!currentUser || !userId || currentUser.uid === userId) return;
@@ -153,7 +224,7 @@ export default function UserProfile() {
         checkFriendship();
     }, [currentUser, userId]);
 
-    // Handle adding or removing friend: updates both users' friend lists bidirectionally
+    // Handle adding or removing friend
     const handleAddFriend = async () => {
         if (!currentUser || !userId || currentUser.uid === userId) return;
         
@@ -190,160 +261,161 @@ export default function UserProfile() {
         }
     };
 
-    // Loading state: show spinner while fetching user profile data
+    // Loading state
     if (loading) {
         return (
-            <div className="container-fluid nav-margin bg-light">
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <div className="spinner-border text-success" role="status">
+                    <span className="visually-hidden">Loading...</span>
                 </div>
             </div>
         );
     }
 
-    // Error state: display error message if profile fetch failed or user not found
+    // Error state
     if (error || !userProfile) {
         return (
-            <div className="container-fluid nav-margin bg-light">
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                    <div className="text-center">
-                        <h2>Error</h2>
-                        <p>{error || 'User not found'}</p>
-                        <button className="btn btn-primary" onClick={() => router.push('/account')}>
-                            Back to Account
-                        </button>
-                    </div>
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <div className="text-center">
+                    <h2>Error</h2>
+                    <p>{error || 'User not found'}</p>
+                    <button className="btn btn-primary" onClick={() => router.push('/home')}>
+                        Back to Home
+                    </button>
                 </div>
             </div>
         );
     }
 
-    // Main render: sidebar navigation and user profile display
     return (
-        <div className="container-fluid nav-margin bg-light">
-            <div className="row">
-                {/* Left sidebar: navigation menu with links to Home, Account, and Favorites */}
-                <div
-                    className="col-3 bg-light vh-100 fixed-top sidebar"
-                    style={{ position: 'fixed', top: '9vh', bottom: 0, overflowY: 'auto' }}
-                >
-                    <ul className="px-4 mt-4 list-unstyled fs-5">
-                        <li className="py-2" 
-                            onClick={() => router.push('/home')}
-                            style={{ cursor: 'pointer' }}>Home</li>
-                        <li className="py-2" 
-                            onClick={() => router.push('/account')}
-                            style={{ cursor: 'pointer' }}>My Account</li>
-                        <li className="py-2">Favorites</li>
-                    </ul>
-                </div>
+        <main className="app-shell">
+            {/* Sidebar (desktop) */}
+            <aside className="app-sidebar d-none d-md-flex">
+                <ul className="app-sidebar-items mt-2">
+                    <li
+                        className="app-sidebar-item"
+                        onClick={() => router.push('/home')}
+                    >
+                        <span className="app-sidebar-icon">
+                            <SidebarHomeIcon />
+                        </span>
+                        <span className="app-sidebar-label">Home</span>
+                    </li>
+                    <li
+                        className="app-sidebar-item"
+                        onClick={() => router.push('/home')} // Ideally this would go to a "Friends" specific page or tab
+                    >
+                        <span className="app-sidebar-icon">
+                            <SidebarUsersIcon />
+                        </span>
+                        <span className="app-sidebar-label">Friends</span>
+                    </li>
+                    <li
+                        className="app-sidebar-item"
+                        onClick={() => router.push('/avo_study')}
+                    >
+                        <span className="app-sidebar-icon">
+                            <SidebarStudyIcon />
+                        </span>
+                        <span className="app-sidebar-label">Avo Study</span>
+                    </li>
+                </ul>
+            </aside>
 
-                {/* Main content area: displays user profile and posts with custom background color */}
-                <div
-                    className="col-9"
-                    style={{
-                        marginTop: '6vh', marginLeft: '25%', paddingTop: '5vh', height: '91vh', overflowY: 'auto', 
-                        borderTopLeftRadius: '5vh', background: userProfile.bgColor
-                    }}
-                >
-                    <div className="container-fluid">
-                        <div className="row" style={{ paddingTop: '5vh' }}>
-                            {/* Left column: profile info (kaomoji, username, friends icon, add friend button) */}
-                            <div className="col-12 col-md-4 px-4">
-                                <div className="d-flex flex-column gap-3">
-                                    {/* Kao */}
-                                    <div style={{ fontSize: '4rem', whiteSpace: 'nowrap', overflow: 'visible' }}>
+            {/* Main content */}
+            <div className="page-container-wide">
+                <div className="d-flex justify-content-center">
+                    <section style={{ width: '100%', maxWidth: 900 }}>
+                        {/* Hero Card */}
+                        <div className="card-elevated mb-5 overflow-hidden">
+                            <div 
+                                className="p-5 d-flex flex-column align-items-center justify-content-center text-center position-relative"
+                                style={{ 
+                                    background: userProfile.bgColor, 
+                                    minHeight: '300px',
+                                    transition: 'background 0.5s ease'
+                                }}
+                            >
+                                <div className="position-relative z-1">
+                                    <div 
+                                        className="mb-3"
+                                        style={{ 
+                                            fontSize: '6rem', 
+                                            lineHeight: 1,
+                                            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))'
+                                        }}
+                                    >
                                         {userProfile.kao}
                                     </div>
-                                    
-                                    {/* Username */}
-                                    <h2 className="mb-3" style={{ wordWrap: 'break-word' }}>
+                                    <h1 className="display-6 fw-bold mb-2" style={{ textShadow: '0 2px 10px rgba(255,255,255,0.5)' }}>
                                         {userProfile.username}
-                                    </h2>
-                                    
-                                    {/* Friends Icon */}
-                                    <button 
-                                        className="btn btn-link no-underline text-inherit hover:underline p-0 border-0 bg-transparent align-self-start"
-                                        style={{ fontSize: '2rem', textDecoration: 'none' }}
-                                        onClick={() => {
-                                            if (currentUser && currentUser.uid === userId) {
-                                                friendsPopupRef.current?.open();
-                                            } else {
-                                                userFriendsPopupRef.current?.open();
-                                            }
-                                        }}
-                                        title={currentUser && currentUser.uid === userId ? "Your Friends" : `${userProfile.username}'s Friends`}
-                                    >
-                                        𖠋♡𖠋
-                                    </button>
-                                    
-                                    {/* Add Friend Button */}
+                                    </h1>
+                                </div>
+                                
+                                {/* Actions */}
+                                <div className="position-absolute top-0 end-0 m-4">
                                     {currentUser && currentUser.uid !== userId && (
                                         <button
-                                            className={`btn align-self-start ${isFriend ? 'btn-outline-danger' : 'btn-primary'}`}
+                                            className={`btn shadow-sm px-4 ${isFriend ? 'btn-light text-danger' : 'btn-light'}`}
                                             onClick={handleAddFriend}
                                             disabled={isLoadingFriend}
                                         >
-                                            {isLoadingFriend ? (
-                                                <>
-                                                    <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                                                    {isFriend ? 'Removing...' : 'Adding...'}
-                                                </>
-                                            ) : (
-                                                isFriend ? 'Remove Friend' : 'Add Friend'
-                                            )}
+                                            {isLoadingFriend ? 'Loading...' : (isFriend ? 'Remove Friend' : 'Add Friend')}
+                                        </button>
+                                    )}
+                                    {currentUser && currentUser.uid === userId && (
+                                        <button 
+                                            className="btn btn-light shadow-sm px-4"
+                                            onClick={() => router.push('/account')}
+                                        >
+                                            Edit Profile
                                         </button>
                                     )}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Posts Section */}
+                        <div className="px-1">
+                            <h4 className="mb-4 fw-bold">
+                                {userProfile.username}'s Posts
+                            </h4>
                             
-                            {/* Right column: user's posts list with alerts for own profile or not logged in */}
-                            <div className="col-12 col-md-8 px-4">
-                                <div className="mb-4">
-                                    {currentUser && currentUser.uid === userId && (
-                                        <div className="alert alert-info mb-3">
-                                            This is your own profile. <a href="/account" className="alert-link">Go to your account page</a> to edit your profile or make posts.
-                                        </div>
-                                    )}
-                                    
-                                    {!currentUser && (
-                                        <div className="alert alert-warning mb-3">
-                                            <a href="/login" className="alert-link">Sign in</a> to add this user as a friend.
-                                        </div>
-                                    )}
-                                </div>
+                            <div className="mb-4">
+                                {currentUser && currentUser.uid === userId && (
+                                    <div className="alert alert-info mb-3" style={{ borderRadius: 'var(--radius-md)' }}>
+                                        This is your own profile. <a href="/account" className="alert-link">Go to your account page</a> to edit your profile.
+                                    </div>
+                                )}
                                 
-                                <h4 className="mb-3">{userProfile.username}'s Posts</h4>
-                                {userPosts.length === 0 ? (
-                                    <p className="text-muted">No posts yet.</p>
-                                ) : (
-                                    <div>
-                                        {userPosts.map((post, idx) => (
-                                            <UserPost 
-                                                key={idx}
-                                                {...post}
-                                            />
-                                        ))}
+                                {!currentUser && (
+                                    <div className="alert alert-warning mb-3" style={{ borderRadius: 'var(--radius-md)' }}>
+                                        <a href="/login" className="alert-link">Sign in</a> to add this user as a friend.
                                     </div>
                                 )}
                             </div>
+
+                            {userPosts.length === 0 ? (
+                                <div className="text-center py-5 text-muted-soft bg-light rounded-4">
+                                    <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>📭</p>
+                                    <p>No posts yet.</p>
+                                </div>
+                            ) : (
+                                <div>
+                                    {userPosts.map((post, idx) => (
+                                        <div key={idx} className="mb-3">
+                                            <Post 
+                                                clickable={false}
+                                                {...post}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
-            {/* Popup modals: friends list for current user or viewed user */}
-            <FriendsPopup
-                ref={friendsPopupRef}
-                currentUser={currentUser}
-            />
-            <UserFriendsPopup
-                ref={userFriendsPopupRef}
-                targetUserId={userId}
-                currentUser={currentUser}
-            />
-        </div>
+        </main>
     );
 }
-

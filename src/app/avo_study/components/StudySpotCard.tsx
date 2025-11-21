@@ -6,13 +6,14 @@ import {
   query, 
   where, 
   orderBy, 
-  onSnapshot,
-  Timestamp 
+  onSnapshot 
 } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
-import { StudySpot, CheckIn, PopulatedCheckIn } from '@/types/study';
+import { StudySpot, CheckIn, PopulatedCheckIn, CheckInPost } from '@/types/study';
 import { getUserData } from '../utils/userCache';
 import CheckInModal from './CheckInModal';
+import StudyRequestModal from './StudyRequestModal';
+import UserDetailModal from './UserDetailModal';
 import CheckInItem from './CheckInItem';
 import './StudySpotCard.css';
 
@@ -55,7 +56,18 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
   const [checkIns, setCheckIns] = useState<PopulatedCheckIn[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedCheckIn, setSelectedCheckIn] = useState<PopulatedCheckIn | null>(null);
+  const [showRequestModal, setShowRequestModal] = useState(false);
   const isOpen = isSpotOpen(spot.hours);
+
+  const handleUserClick = (checkIn: PopulatedCheckIn) => {
+    console.log('User clicked:', checkIn.user?.username);
+    setSelectedCheckIn(checkIn);
+  };
+
+  const handleSendRequest = () => {
+    setShowRequestModal(true);
+  };
 
   // Real-time listener for active check-ins at this spot
   useEffect(() => {
@@ -102,76 +114,107 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
     return () => unsubscribe();
   }, [spot.id]);
 
-  const openCount = checkIns.filter(c => c.status === 'open').length;
-
   return (
     <>
-      <div className="study-spot-card">
-        {/* Card Header - Compact */}
-        <div className="card-header-section">
-          <div className="spot-name-row">
-            <h3 className="spot-name">{spot.name}</h3>
-            <div className={`location-badge ${isOpen ? 'badge-open' : 'badge-closed'}`}>
-              📍 {isOpen ? 'Open' : 'Closed'}
-            </div>
-            <div className="spot-hours">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="clock-icon">
-                <path d="M8 0.5C3.86 0.5 0.5 3.86 0.5 8C0.5 12.14 3.86 15.5 8 15.5C12.14 15.5 15.5 12.14 15.5 8C15.5 3.86 12.14 0.5 8 0.5ZM8 14C4.69 14 2 11.31 2 8C2 4.69 4.69 2 8 2C11.31 2 14 4.69 14 8C14 11.31 11.31 14 8 14Z" fill="currentColor"/>
-                <path d="M8.5 4.5H7.25V8.75L10.875 10.875L11.5 9.8625L8.5 8.125V4.5Z" fill="currentColor"/>
-              </svg>
-              <span>{spot.hours}</span>
-            </div>
+      <div className="card-elevated h-100 d-flex flex-column position-relative overflow-hidden group-hover-effect">
+        {/* Header Section with Status Strip */}
+        <div 
+          className="p-4 pb-3"
+          style={{ 
+            background: isOpen 
+              ? 'linear-gradient(to right, rgba(91, 155, 126, 0.1), rgba(255, 255, 255, 0))' 
+              : 'linear-gradient(to right, rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0))' 
+          }}
+        >
+          <div className="d-flex justify-content-between align-items-start mb-2">
+            <h3 className="h5 fw-bold mb-0 text-dark">{spot.name}</h3>
+            <span 
+              className={`badge rounded-pill ${isOpen ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-muted'}`}
+              style={{ fontSize: '0.75rem', fontWeight: 600 }}
+            >
+              {isOpen ? 'Open' : 'Closed'}
+            </span>
           </div>
-          {checkIns.length > 0 && (
-            <div className="spot-count">
-              <span className="count-badge">
-                {checkIns.length} studying
-              </span>
-            </div>
-          )}
+          
+          <div className="d-flex align-items-center text-muted-soft" style={{ fontSize: '0.9rem' }}>
+            <span className="me-2">🕒</span>
+            {spot.hours}
+          </div>
         </div>
 
-        {/* Roster Section */}
-        <div className="roster-section">
+        {/* Roster / Face Scroll Section */}
+        <div className="px-4 py-3 flex-grow-1">
           {loading ? (
-            <div className="roster-loading">
-              <div className="spinner-border spinner-border-sm text-success" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <span className="loading-text">Loading roster...</span>
+            <div className="d-flex align-items-center gap-2 text-muted-soft">
+              <div className="spinner-border spinner-border-sm" />
+              <small>Checking occupancy...</small>
             </div>
-          ) : checkIns.length === 0 ? (
-            <div className="roster-empty">
-              <div className="empty-roster-icon">
-                <img src="/avocado-icon.png" alt="No avocado" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+          ) : checkIns.length > 0 ? (
+            <div>
+              <div className="d-flex justify-content-between align-items-end mb-2">
+                <small className="text-muted fw-bold text-uppercase" style={{ fontSize: '0.7rem' }}>
+                  Who's Here
+                </small>
+                <small className="text-success fw-medium" style={{ fontSize: '0.8rem' }}>
+                  {checkIns.length} active
+                </small>
               </div>
-              <p>no avocado found here</p>
-              <span className="be-first-badge">Be the first!</span>
+              
+              {/* Horizontal Scrollable Roster */}
+              <div 
+                className="d-flex align-items-center gap-2 overflow-x-auto pb-2"
+                style={{ 
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: 'var(--border-medium) transparent' 
+                }}
+              >
+                {checkIns.map((checkIn) => {
+                  const isCurrentUser = auth.currentUser?.uid === checkIn.userId;
+                  return (
+                    <div 
+                      key={checkIn.id}
+                      title={checkIn.user?.username}
+                      className="user-pill"
+                      onClick={() => handleUserClick(checkIn)}
+                      style={{ 
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        background: isCurrentUser ? 'var(--light-green)' : 'var(--background-subtle)',
+                        border: isCurrentUser ? '1px solid var(--primary-green)' : '1px solid var(--border-subtle)',
+                        color: isCurrentUser ? 'var(--forest-green)' : 'inherit',
+                        fontWeight: isCurrentUser ? 600 : 'normal',
+                        fontSize: '0.9rem',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                        transition: 'all 0.2s ease',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {checkIn.user?.kao || '??'}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ) : (
-            <div className="roster-list">
-              {checkIns.map(checkIn => (
-                <CheckInItem key={checkIn.id} checkIn={checkIn} />
-              ))}
+            <div className="text-center py-3 rounded bg-light border border-dashed">
+              <small className="text-muted d-block mb-1">It's quiet right now</small>
+              <span style={{ fontSize: '1.5rem' }}>🌱</span>
             </div>
           )}
         </div>
 
-        {/* Card Footer */}
-        <div className="card-footer-section">
+        {/* Action Footer */}
+        <div className="p-4 pt-0 mt-auto">
           <button 
-            className="check-in-button"
+            className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
             onClick={() => setShowModal(true)}
             disabled={!auth.currentUser}
           >
-            <span className="button-icon">✓</span>
-            <span>Check In Here</span>
+            <span>📍</span> Check In
           </button>
-          {!auth.currentUser && (
-            <small className="text-muted text-center d-block mt-2">
-              Sign in to check in
-            </small>
-          )}
         </div>
       </div>
 
@@ -181,6 +224,47 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
       />
+
+      {/* User Detail Modal */}
+      {selectedCheckIn && (
+        <UserDetailModal
+          checkIn={selectedCheckIn}
+          isOpen={!!selectedCheckIn && !showRequestModal}
+          onClose={() => setSelectedCheckIn(null)}
+          onSendRequest={handleSendRequest}
+          isCurrentUser={auth.currentUser?.uid === selectedCheckIn.userId}
+        />
+      )}
+
+      {/* Study Request Modal */}
+      {selectedCheckIn && showRequestModal && (
+        <StudyRequestModal
+          isOpen={showRequestModal}
+          onClose={() => {
+            setShowRequestModal(false);
+            setSelectedCheckIn(null);
+          }}
+          checkInPost={{
+            uid: selectedCheckIn.userId,
+            checkInId: selectedCheckIn.id,
+            spotId: selectedCheckIn.spotId,
+            spotName: spot.name,
+            status: selectedCheckIn.status,
+            statusNote: selectedCheckIn.statusNote,
+            expiresAt: selectedCheckIn.expiresAt,
+            text: '',
+            date: '',
+            likes: 0,
+            type: 'checkin'
+          } as CheckInPost}
+          recipientUsername={selectedCheckIn.user?.username || 'Unknown'}
+          recipientKao={selectedCheckIn.user?.kao || '(^_^)'}
+          onSuccess={() => {
+            setShowRequestModal(false);
+            setSelectedCheckIn(null);
+          }}
+        />
+      )}
     </>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { collection, addDoc, Timestamp, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { StudySpot, CheckInStatus, DURATION_PRESETS, CHAR_LIMITS, STATUS_OPTIONS } from '@/types/study';
@@ -141,7 +142,7 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
 
   if (!isOpen && !showErrorModal) return null;
 
-  return (
+  const content = (
     <>
       {/* Error Modal */}
       <ErrorModal
@@ -302,5 +303,12 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
       )}
     </>
   );
+
+  // Use portal if window is defined
+  if (typeof document !== 'undefined') {
+    return createPortal(content, document.body);
+  }
+
+  return content;
 }
 

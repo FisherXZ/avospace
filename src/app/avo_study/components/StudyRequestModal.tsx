@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { CheckInPost, CHAR_LIMITS } from '@/types/study';
@@ -75,7 +76,7 @@ export default function StudyRequestModal({
 
   if (!isOpen) return null;
 
-  return (
+  const content = (
     <>
       {/* Backdrop */}
       <div 
@@ -188,5 +189,12 @@ export default function StudyRequestModal({
       </div>
     </>
   );
+
+  // Use portal if window is defined
+  if (typeof document !== 'undefined') {
+    return createPortal(content, document.body);
+  }
+  
+  return content;
 }
 

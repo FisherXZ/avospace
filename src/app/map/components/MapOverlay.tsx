@@ -1,99 +1,106 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Sidebar Icons (matching avo_study page)
+function SidebarHomeIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5V14h-5V21H5a1 1 0 0 1-1-1v-9.5z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SidebarStudyIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4 6.5C4 5.67 4.67 5 5.5 5h8.5a3 3 0 0 1 3 3v10.5l-4.25-2.25L8.5 18.5 4 16.25V6.5z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 9h4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MapIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+      <line x1="8" y1="2" x2="8" y2="18"></line>
+      <line x1="16" y1="6" x2="16" y2="22"></line>
+    </svg>
+  );
+}
 
 export default function MapOverlay() {
   const router = useRouter();
-  const [activeFilter, setActiveFilter] = useState<string>('nearby');
-
-  const handleRecenter = () => {
-    // This will be handled by the map component
-    console.log('Recenter map');
-  };
-
-  const handleLayers = () => {
-    console.log('Toggle layers');
-  };
-
-  const handleSearch = () => {
-    console.log('Open search');
-  };
-
-  const handleAvatar = () => {
-    router.push('/account');
-  };
 
   return (
-    <div className="ui-layer">
-      <div className="ui-inner">
-        {/* Top Bar */}
-        <div className="top-bar">
-          <div className="avatar" onClick={handleAvatar} title="Go to profile">
-            <img src="/avocado-icon.png" alt="Avo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          </div>
-          <div className="search-chip" onClick={handleSearch}>
-            <span className="icon">🔍</span>
-            <span className="placeholder">Search friends, places...</span>
-          </div>
-        </div>
-
-        {/* Bottom Sheet */}
-        <div className="bottom-sheet">
-          <div className="bottom-handle"></div>
-          <div className="bottom-title">🗺️ Study Spots Near You</div>
-          <div className="bottom-subtitle">
-            Find where your friends are studying on campus
-          </div>
-          
-          <div className="pill-row">
-            <div 
-              className={`pill ${activeFilter === 'nearby' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('nearby')}
-            >
-              📍 Nearby
-            </div>
-            <div 
-              className={`pill ${activeFilter === 'friends' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('friends')}
-            >
-              👥 Friends
-            </div>
-            <div 
-              className={`pill ${activeFilter === 'favorites' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('favorites')}
-            >
-              ⭐ Favorites
-            </div>
-          </div>
-
-          <button 
-            className="primary-btn"
-            onClick={() => router.push('/avo_study')}
+    <>
+      {/* Sidebar Navigation */}
+      <aside className="map-sidebar d-none d-md-flex">
+        <ul className="map-sidebar-items">
+          <li
+            className="map-sidebar-item"
+            onClick={() => router.push('/home')}
+            title="Home"
           >
-            📋 View Full Roster
-          </button>
-        </div>
-      </div>
+            <span className="map-sidebar-icon">
+              <SidebarHomeIcon />
+            </span>
+            <span className="map-sidebar-label">Home</span>
+          </li>
+          <li
+            className="map-sidebar-item"
+            onClick={() => router.push('/avo_study')}
+            title="Avo Study"
+          >
+            <span className="map-sidebar-icon">
+              <SidebarStudyIcon />
+            </span>
+            <span className="map-sidebar-label">Avo Study</span>
+          </li>
+          <li className="map-sidebar-item map-sidebar-item-active">
+            <span className="map-sidebar-icon">
+              <MapIcon />
+            </span>
+            <span className="map-sidebar-label">Map</span>
+          </li>
+        </ul>
+      </aside>
 
-      {/* Floating Right Buttons */}
-      <div className="right-buttons">
+      {/* Map Info Card */}
+      <div className="map-info-card">
+        <h3 className="map-info-title">Study Spots Map</h3>
+        <p className="map-info-subtitle">
+          Explore study locations on campus
+        </p>
         <button 
-          className="round-btn" 
-          onClick={handleRecenter}
-          title="Re-center map"
+          className="map-roster-btn"
+          onClick={() => router.push('/avo_study')}
         >
-          🎯
-        </button>
-        <button 
-          className="round-btn" 
-          onClick={handleLayers}
-          title="Map layers"
-        >
-          🗺️
+          📋 View All Spots
         </button>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -464,6 +464,257 @@ jobs:
 
 ---
 
+### Phase 3: Map Improvements (Week 2-3)
+
+#### 3.1 Accurate Study Spot Markers
+
+**Current Issue:** Need to add real coordinates to study spots
+
+**Implementation:**
+
+**A. Update Data Model** (`study_spots` collection)
+```typescript
+interface StudySpot {
+  id: string;
+  name: string;
+  hours: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  address: string;           // NEW: Full address for accessibility
+  buildingCode?: string;     // NEW: e.g., "DOE" for Doe Library
+}
+```
+
+**B. UC Berkeley Study Spot Coordinates**
+```typescript
+export const STUDY_SPOTS_WITH_COORDS = [
+  {
+    id: 'doe-library',
+    name: 'Doe Library',
+    hours: '8:00 AM - 12:00 AM',
+    coordinates: { lat: 37.8722, lng: -122.2595 },
+    address: 'Doe Memorial Library, Berkeley, CA 94720',
+    buildingCode: 'DOE'
+  },
+  {
+    id: 'moffitt-library',
+    name: 'Moffitt Library',
+    hours: '24 Hours',
+    coordinates: { lat: 37.8726, lng: -122.2607 },
+    address: 'Moffitt Library, Berkeley, CA 94720',
+    buildingCode: 'MOFFITT'
+  },
+  {
+    id: 'main-stacks',
+    name: 'Main Stacks',
+    hours: '8:00 AM - 10:00 PM',
+    coordinates: { lat: 37.8723, lng: -122.2594 },
+    address: 'Main Stacks, Berkeley, CA 94720',
+    buildingCode: 'MAIN'
+  },
+  {
+    id: 'mlk-student-union',
+    name: 'MLK Student Union',
+    hours: '7:00 AM - 11:00 PM',
+    coordinates: { lat: 37.8693, lng: -122.2598 },
+    address: 'MLK Jr. Student Union, Berkeley, CA 94720',
+    buildingCode: 'MLK'
+  },
+  {
+    id: 'kresge-engineering',
+    name: 'Kresge Engineering Library',
+    hours: '8:00 AM - 11:00 PM',
+    coordinates: { lat: 37.8754, lng: -122.2577 },
+    address: 'Kresge Engineering Library, Berkeley, CA 94720',
+    buildingCode: 'KRESGE'
+  }
+];
+```
+
+**C. Migration Script**
+```bash
+npm run migrate:add-coordinates
+```
+
+#### 3.2 Real-Time User Count on Map
+
+**Implementation:**
+
+**A. Aggregate Check-Ins by Spot**
+```typescript
+// In LeafletMap.tsx or MapView.tsx
+const [spotCounts, setSpotCounts] = useState<Record<string, number>>({});
+
+useEffect(() => {
+  // Real-time listener for ALL active check-ins
+  const unsubscribe = onSnapshot(
+    query(
+      collection(db, 'check_ins'),
+      where('isActive', '==', true)
+    ),
+    (snapshot) => {
+      const counts: Record<string, number> = {};
+      
+      snapshot.docs.forEach(doc => {
+        const checkIn = doc.data();
+        if (checkIn.expiresAt.toMillis() > Date.now()) {
+          counts[checkIn.spotId] = (counts[checkIn.spotId] || 0) + 1;
+        }
+      });
+      
+      setSpotCounts(counts);
+    }
+  );
+  
+  return () => unsubscribe();
+}, []);
+```
+
+**B. Custom Map Markers with Count Badge**
+```typescript
+// Custom Leaflet marker with count
+import L from 'leaflet';
+
+function createCountMarker(spot: StudySpot, count: number) {
+  const icon = L.divIcon({
+    className: 'custom-marker',
+    html: `
+      <div class="marker-container">
+        <div class="marker-icon">🥑</div>
+        ${count > 0 ? `<div class="marker-badge">${count}</div>` : ''}
+      </div>
+    `,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40]
+  });
+  
+  return L.marker([spot.coordinates.lat, spot.coordinates.lng], { icon });
+}
+```
+
+**C. Marker Styling** (`map.css`)
+```css
+.marker-container {
+  position: relative;
+}
+
+.marker-icon {
+  font-size: 32px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.marker-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #E89B8E; /* Coral */
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+```
+
+#### 3.3 Clickable Markers → Study Spot Card Popup
+
+**Implementation:**
+
+**A. Leaflet Popup with StudySpotCard**
+```typescript
+// In LeafletMap.tsx
+import { renderToString } from 'react-dom/server';
+import StudySpotCard from '@/app/avo_study/components/StudySpotCard';
+
+// Option 1: Simple Popup (Recommended)
+marker.bindPopup(`
+  <div class="map-popup">
+    <h3>${spot.name}</h3>
+    <p>${spot.hours}</p>
+    <p><strong>${count} studying now</strong></p>
+    <a href="/avo_study#${spot.id}" class="btn-view-roster">
+      View Roster →
+    </a>
+  </div>
+`);
+
+// Option 2: Full StudySpotCard in Popup (Advanced)
+// Note: Requires careful handling of React in Leaflet
+const popupContent = document.createElement('div');
+ReactDOM.createRoot(popupContent).render(
+  <StudySpotCard spot={spot} compact={true} />
+);
+marker.bindPopup(popupContent);
+```
+
+**B. Smooth Scroll to Card on Map Click**
+```typescript
+// Add anchor IDs to cards
+<div id={`spot-${spot.id}`} className="study-spot-card">
+  ...
+</div>
+
+// Handle map marker click
+marker.on('click', () => {
+  // Close map overlay if in mobile view
+  setShowMapOverlay(false);
+  
+  // Smooth scroll to corresponding card
+  const cardElement = document.getElementById(`spot-${spot.id}`);
+  cardElement?.scrollIntoView({ 
+    behavior: 'smooth', 
+    block: 'center' 
+  });
+  
+  // Optional: Highlight card briefly
+  cardElement?.classList.add('highlight-pulse');
+  setTimeout(() => {
+    cardElement?.classList.remove('highlight-pulse');
+  }, 2000);
+});
+```
+
+**C. Bidirectional Navigation**
+```typescript
+// Add "Show on Map" button to StudySpotCard
+<button 
+  className="show-on-map-btn"
+  onClick={() => {
+    router.push(`/map?spotId=${spot.id}`);
+  }}
+>
+  📍 Show on Map
+</button>
+
+// In MapView, check for query param and zoom
+useEffect(() => {
+  const spotId = searchParams.get('spotId');
+  if (spotId && mapRef.current) {
+    const spot = spots.find(s => s.id === spotId);
+    if (spot) {
+      mapRef.current.flyTo(
+        [spot.coordinates.lat, spot.coordinates.lng],
+        17, // zoom level
+        { duration: 1.5 }
+      );
+      
+      // Open popup automatically
+      markersRef.current[spotId]?.openPopup();
+    }
+  }
+}, [searchParams, spots]);
+```
+
+---
 
 ## Production Operations
 

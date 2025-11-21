@@ -1,48 +1,147 @@
 :root {
-  /* Color system */
-  --background-page: #fafafa;
+  /* ============================================
+     AVO SPACE - DESIGN SYSTEM
+     Soft Eco-Modern Theme
+     ============================================ */
+
+  /* Core Brand Colors (from avo_study) */
+  --forest-green: #4A6B4A;
+  --sage-green: #7A9A7A;
+  --primary-green: #5B9B7E;
+  --light-green: #E8F3E8;
+  --coral: #E89B8E;
+  --sky-blue: #A8C8E8;
+  --yellow-highlight: #F4F0B8;
+
+  /* Semantic Colors */
+  --background-page: #f8f9fa;
   --background-surface: #ffffff;
-  --border-subtle: #e5e5e5;
-  --text-primary: #111111;
-  --text-muted: #737373;
-  --accent-primary: #38ad38;
+  --background-subtle: #f1f3f5;
+  
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #868e96;
+  
+  --border-subtle: #e9ecef;
+  --border-medium: #dee2e6;
 
-  /* Typography */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-size-base: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 20px;
+  /* Interactive */
+  --action-primary: var(--forest-green);
+  --action-primary-hover: #3d583d;
+  --action-secondary: #f1f3f5;
+  --action-secondary-hover: #e9ecef;
 
-  /* Radius & shadow */
-  --radius-card: 12px;
-  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
+  /* Surfaces & Effects */
+  --glass-surface: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: 12px;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
 }
 
-/* Global styles */
+/* ============================================
+   GLOBAL RESETS & BASE STYLES
+   ============================================ */
+
 body {
   margin: 0;
   padding: 0;
   background-color: var(--background-page);
   color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: var(--font-size-base);
+  /* Font is set via next/font in layout.tsx */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 a:hover {
   text-decoration: none;
+  color: var(--primary-green);
+}
+
+/* ============================================
+   COMPONENT OVERRIDES (BOOTSTRAP)
+   ============================================ */
+
+/* Buttons */
+.btn {
+  border-radius: var(--radius-pill) !important;
+  padding: 0.6rem 1.5rem !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  transition: all var(--transition-normal) !important;
+  border: none !important;
 }
 
 .btn-primary {
-  background-color: var(--accent-primary) !important;
-  border-color: var(--accent-primary) !important;
+  background-color: var(--forest-green) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(74, 107, 74, 0.2);
 }
 
-/* App shell & layout helpers */
+.btn-primary:hover {
+  background-color: var(--action-primary-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 107, 74, 0.3);
+}
+
+.btn-outline-secondary {
+  background-color: transparent !important;
+  border: 1px solid var(--border-medium) !important;
+  color: var(--text-secondary) !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--action-secondary) !important;
+  border-color: var(--border-medium) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Cards */
+.card, .card-bordered, .card-elevated {
+  background-color: var(--background-surface);
+  border: 1px solid rgba(0,0,0,0.04) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* Inputs */
+.form-control {
+  background-color: var(--background-subtle);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.form-control:focus {
+  background-color: var(--background-surface);
+  border-color: var(--sage-green);
+  box-shadow: 0 0 0 4px rgba(91, 155, 126, 0.15);
+}
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+
 .app-shell {
   min-height: 100vh;
   background-color: var(--background-page);
@@ -51,110 +150,64 @@ a:hover {
 .page-container {
   max-width: 960px;
   margin: 0 auto;
-  padding: 88px 16px 32px; /* account for fixed navbar height */
+  padding: 88px 16px 32px;
 }
 
 .page-container-wide {
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 88px 16px 32px;
 }
 
-.card-elevated {
-  background-color: var(--background-surface);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-.card-bordered {
-  background-color: var(--background-surface);
-  border-radius: var(--radius-card);
-  border: 1px solid var(--border-subtle);
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
 }
 
 .text-muted-soft {
   color: var(--text-muted);
 }
 
-.section-title {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-  margin-bottom: 16px;
-}
+/* ============================================
+   NAVBAR & SIDEBAR (SHARED)
+   ============================================ */
 
-/* Navbar refinements */
 .navbar {
-  z-index: 99;
-  border-bottom: 1px solid var(--border-subtle);
-  background-color: var(--background-surface) !important;
+  z-index: 1000 !important;
   height: 64px;
+  background: var(--glass-surface) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid rgba(0,0,0,0.04) !important;
 }
 
 .navbar-brand img {
-  height: 36px;
+  height: 32px;
   width: auto;
 }
 
-.navbar-nav .nav-link {
-  font-size: var(--font-size-base);
-  padding-inline: 12px;
-}
-
-.navbar-shadow {
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
-}
-
-.nav-margin{
-  margin-top: 4vh;
-}
-
-.sidebar{
-  z-index: 999;
-}
-
-.light-text{
-  color: #f8f9fa;
-}
-
-.mt-user {
-  margin-top: 20vh;
-  margin-left: 8vh;
-}
-
-/* Override bg-white for col-9 in home page */
-.bg-light-blue {
-  background-color: #e3f2fd !important;
-}
-
-/* Home sidebar (Instagram-inspired) */
+/* Sidebar (Global) */
 .app-sidebar {
   position: fixed;
   top: 64px;
   bottom: 0;
   left: 0;
-  width: 72px;
-  padding: 24px 12px;
-  background-color: var(--background-page);
-  color: var(--text-primary);
+  width: 80px; /* Slightly wider */
+  padding: 32px 16px;
+  background-color: var(--background-surface);
+  border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
-  transition: width 0.2s ease;
-  border-right: 1px solid var(--border-subtle);
+  transition: width var(--transition-normal);
+  z-index: 900;
 }
 
 .app-sidebar:hover {
-  width: 220px;
-}
-
-.app-sidebar-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 16px;
+  width: 240px;
+  box-shadow: var(--shadow-md);
 }
 
 .app-sidebar-items {
@@ -162,44 +215,49 @@ a:hover {
   padding: 0;
   margin: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .app-sidebar-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 10px;
-  border-radius: 999px;
+  gap: 16px;
+  padding: 12px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  color: var(--text-primary);
-  font-size: 15px;
-  margin-bottom: 4px;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
 }
 
 .app-sidebar-item:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--action-secondary);
+  color: var(--text-primary);
+  transform: translateX(4px);
 }
 
 .app-sidebar-item-active {
-  background-color: var(--background-surface);
-  color: var(--text-primary);
+  background-color: var(--light-green);
+  color: var(--forest-green);
+  font-weight: 600;
 }
 
 .app-sidebar-icon {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-size: 18px;
+  width: 24px;
+  height: 24px;
 }
 
 .app-sidebar-label {
   opacity: 0;
-  transform: translateX(-4px);
+  transform: translateX(-10px);
   white-space: nowrap;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: all var(--transition-normal);
 }
 
 .app-sidebar:hover .app-sidebar-label {
@@ -207,10 +265,14 @@ a:hover {
   transform: translateX(0);
 }
 
-@media (max-width: 767.98px) {
+/* Mobile adjustments */
+@media (max-width: 768px) {
   .app-sidebar {
     display: none;
   }
+  
+  .page-container, .page-container-wide {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
-
-
