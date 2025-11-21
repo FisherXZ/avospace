@@ -30,36 +30,49 @@ export interface StudySpot {
   id: string;
   name: string;
   hours: string;
+  latitude: number;
+  longitude: number;
 }
 
 /**
- * Study spots data - Simplified for MVP (card-based interface)
+ * Study spots data - Includes geographic coordinates for map display
+ * Coordinates are accurate locations on UC Berkeley campus
  */
 export const studySpots: StudySpot[] = [
   {
     id: 'doe-library',
     name: 'Doe Library',
-    hours: '8:00 AM - 12:00 AM'
+    hours: '8:00 AM - 12:00 AM',
+    latitude: 37.8722,
+    longitude: -122.2591
   },
   {
     id: 'moffitt-library',
     name: 'Moffitt Library',
-    hours: '24 Hours'
+    hours: '24 Hours',
+    latitude: 37.8726,
+    longitude: -122.2608
   },
   {
     id: 'main-stacks',
     name: 'Main Stacks',
-    hours: '8:00 AM - 10:00 PM'
+    hours: '8:00 AM - 10:00 PM',
+    latitude: 37.8727,
+    longitude: -122.2601
   },
   {
     id: 'mlk-student-union',
     name: 'MLK Student Union',
-    hours: '7:00 AM - 11:00 PM'
+    hours: '7:00 AM - 11:00 PM',
+    latitude: 37.8699,
+    longitude: -122.2585
   },
   {
     id: 'kresge-engineering',
     name: 'Kresge Engineering Library',
-    hours: '8:00 AM - 11:00 PM'
+    hours: '8:00 AM - 11:00 PM',
+    latitude: 37.8745,
+    longitude: -122.2570
   }
 ];
 
@@ -80,8 +93,9 @@ async function seedStudySpots() {
 
     console.log('\n🎉 Successfully seeded all study spots!');
     console.log(`\nTotal spots added: ${studySpots.length}`);
-    console.log('\n📋 Each spot has: name, hours (2 fields)');
+    console.log('\n📋 Each spot has: name, hours, latitude, longitude (4 fields)');
     console.log('\n💡 Note: Document ID serves as the spot ID');
+    console.log('\n🗺️  Geographic coordinates added for map display');
     
   } catch (error) {
     console.error('❌ Error seeding study spots:', error);

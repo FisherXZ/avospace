@@ -12,6 +12,8 @@ export interface StudySpot {
   id: string;                    // Firestore document ID (e.g., "doe-library")
   name: string;                  // Display name (e.g., "Doe Library")
   hours: string;                 // Operating hours (e.g., "8:00 AM - 12:00 AM")
+  latitude: number;              // Geographic latitude for map display
+  longitude: number;             // Geographic longitude for map display
 }
 
 /**

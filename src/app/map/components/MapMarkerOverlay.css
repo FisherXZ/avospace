@@ -1,0 +1,205 @@
+/* ============================================
+   CUSTOM LEAFLET POPUP STYLING
+   ============================================ */
+
+/* Remove default Leaflet popup styles */
+.custom-map-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: none;
+  background: transparent;
+}
+
+.custom-map-popup .leaflet-popup-content {
+  margin: 0;
+  width: auto !important;
+}
+
+.custom-map-popup .leaflet-popup-tip-container {
+  display: none; /* Hide the default tip/arrow */
+}
+
+.custom-map-popup .leaflet-popup-close-button {
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  font-size: 20px;
+  color: white;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 10;
+}
+
+.custom-map-popup .leaflet-popup-close-button:hover {
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+/* ============================================
+   MAP MARKER OVERLAY - CUSTOM STYLED MARKER
+   ============================================ */
+
+.map-marker-overlay {
+  background: white;
+  border: 2px solid var(--primary-green, #5B9B7E);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  min-width: 200px;
+  max-width: 250px;
+  font-family: Inter, -apple-system, sans-serif;
+  overflow: hidden;
+  cursor: default;
+  animation: markerFadeIn 0.3s ease-out;
+}
+
+@keyframes markerFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Header */
+.map-marker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--primary-green, #5B9B7E);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.map-marker-spot-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-marker-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 6px;
+  margin-left: 8px;
+}
+
+/* User List */
+.map-marker-users {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-marker-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--bg-primary, #FAFAFA);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.map-marker-user:hover {
+  background: var(--light-green, #E8F5E9);
+  border-color: var(--primary-green, #5B9B7E);
+  transform: translateX(2px);
+}
+
+.map-marker-kao {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.map-marker-username {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #2C3E50);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* More indicator */
+.map-marker-more {
+  padding: 6px 8px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary, #7F8C8D);
+  font-weight: 500;
+  background: var(--bg-secondary, #F5F5F5);
+  border-radius: 8px;
+  font-style: italic;
+}
+
+/* Empty state */
+.map-marker-empty {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.empty-icon {
+  font-size: 32px;
+}
+
+.empty-text {
+  font-size: 12px;
+  color: var(--text-secondary, #7F8C8D);
+  font-style: italic;
+}
+
+/* Hover effects for entire marker */
+.map-marker-overlay:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .map-marker-overlay {
+    min-width: 180px;
+    max-width: 220px;
+  }
+
+  .map-marker-header {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .map-marker-username {
+    font-size: 13px;
+  }
+
+  .map-marker-kao {
+    font-size: 16px;
+  }
+}
+
