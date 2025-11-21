@@ -29,6 +29,7 @@ export default function CheckInPost({ post }: CheckInPostProps) {
   const [username, setUsername] = useState<string>('Unknown');
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   const statusInfo = getStatusInfo(post.status);
   const isOwnPost = auth.currentUser?.uid === post.uid;
@@ -52,6 +53,16 @@ export default function CheckInPost({ post }: CheckInPostProps) {
     };
     fetchUserInfo();
   }, [post.uid]);
+
+  // Auto-hide toast after 3 seconds
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   // Check if check-in has expired
   useEffect(() => {
@@ -150,10 +161,16 @@ export default function CheckInPost({ post }: CheckInPostProps) {
           isOpen={showRequestModal}
           onClose={() => setShowRequestModal(false)}
           onSuccess={() => {
-            // Could show a success toast here
-            console.log('Study request sent successfully!');
+            setToast(`📨 Request sent to @${username}`);
           }}
         />
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="toast-notification toast-success">
+          {toast}
+        </div>
       )}
     </>
   );

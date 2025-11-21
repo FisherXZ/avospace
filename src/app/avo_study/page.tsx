@@ -86,6 +86,16 @@ function SidebarStudyIcon() {
   );
 }
 
+function MapIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+      <line x1="8" y1="2" x2="8" y2="18"></line>
+      <line x1="16" y1="6" x2="16" y2="22"></line>
+    </svg>
+  );
+}
+
 export default function AvoStudyPage() {
   const router = useRouter();
   const [spots, setSpots] = useState<StudySpot[]>([]);
@@ -154,7 +164,7 @@ export default function AvoStudyPage() {
           </li>
           <li
             className="app-sidebar-item"
-            onClick={() => router.push('/friends')}
+            onClick={() => router.push('/home')}
           >
             <span className="app-sidebar-icon">
               <SidebarUsersIcon />
@@ -179,13 +189,15 @@ export default function AvoStudyPage() {
               <h2 className="section-title">Avo Study Spots</h2>
               <p className="section-subtitle">Check in to let others know you're studying</p>
             </div>
-            <button 
-              className="map-view-button"
-              onClick={() => router.push('/map')}
-              title="View map"
-            >
-              🗺️ Map View
-            </button>
+            <div className="header-actions">
+              <button 
+                className="map-view-button"
+                onClick={() => router.push('/map')}
+                title="View map"
+              >
+                <MapIcon /> Map View
+              </button>
+            </div>
           </div>
 
           {/* Active Check-In Banner */}

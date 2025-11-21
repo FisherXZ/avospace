@@ -103,8 +103,8 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
     onChange: (val: string) => void;
   }) {
     return (
-      <div className="mb-2">
-        <label>{label}</label>
+      <div className="mb-3">
+        <label className="form-label small text-muted fw-bold text-uppercase">{label}</label>
         <select className="form-select" value={value} onChange={(e) => onChange(e.target.value)}>
           {options.map((opt, i) => (
             <option key={i} value={opt}>{opt || '(none)'}</option>
@@ -184,83 +184,98 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
 
   return (
     <div
-      className="position-fixed top-0 start-0 w-100 h-100"
-      style={{ background: 'rgba(0,0,0,0.4)', zIndex: 1050 }}
+      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+      style={{ 
+        background: 'rgba(0,0,0,0.4)', 
+        zIndex: 1050,
+        backdropFilter: 'blur(4px)'
+      }}
       onClick={() => setIsOpen(false)}
     >
       <div
-        className="bg-white rounded shadow p-4"
+        className="card-elevated p-0 d-flex flex-column"
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
           width: 'min(90vw, 600px)',
           maxHeight: '90vh',
-          overflowY: 'auto'
+          animation: 'fadeInUp 0.3s ease-out'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h5 className="mb-3">Edit Profile</h5>
-        {error && <div className="alert alert-danger py-2">{error}</div>}
-        
-        <div className="mb-3">
-          <label>Username</label>
-          <input 
-            className="form-control"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <small className="form-text text-muted">This cannot be changed later</small>
+        {/* Header */}
+        <div className="p-4 border-bottom">
+          <h5 className="mb-0 fw-bold">Edit Profile</h5>
         </div>
-        
-        <div className="mb-3">
-          <label>Phone Number <span className="text-muted">(optional)</span></label>
-          <input 
-            className={`form-control ${phoneError ? 'is-invalid' : ''}`}
-            type="tel"
-            placeholder="+1 (415) 555-1234"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
-          {phoneError && (
-            <div className="invalid-feedback">{phoneError}</div>
-          )}
-          {!phoneError && (
-            <small className="form-text text-muted">
-              📱 For study buddy notifications (kept private)
-            </small>
-          )}
-        </div>
-        
-        {/* Live Kaomoji Preview */}
-        <div className="mb-4 p-3 border rounded" style={{ background: bgColor }}>
-          <label className="form-label fw-bold">Live Preview:</label>
-          <div className="text-center" style={{ fontSize: '2.5rem', minHeight: '3rem' }}>
-            {liveKaomoji}
+
+        {/* Scrollable Content */}
+        <div className="p-4 overflow-y-auto">
+          {error && <div className="alert alert-danger py-2 mb-4">{error}</div>}
+          
+          <div className="mb-4">
+            <label className="form-label fw-bold">Username</label>
+            <input 
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <small className="form-text text-muted">This cannot be changed later</small>
+          </div>
+          
+          <div className="mb-4">
+            <label className="form-label fw-bold">Phone Number <span className="text-muted fw-normal">(optional)</span></label>
+            <input 
+              className={`form-control ${phoneError ? 'is-invalid' : ''}`}
+              type="tel"
+              placeholder="+1 (415) 555-1234"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+            {phoneError && (
+              <div className="invalid-feedback">{phoneError}</div>
+            )}
+            {!phoneError && (
+              <small className="form-text text-muted">
+                📱 For study buddy notifications (kept private)
+              </small>
+            )}
+          </div>
+          
+          {/* Live Kaomoji Preview */}
+          <div className="mb-4 p-4 border rounded-3 text-center" style={{ background: bgColor, transition: 'background 0.3s ease' }}>
+            <label className="form-label fw-bold mb-3 d-block text-start">Live Preview</label>
+            <div style={{ fontSize: '3rem', minHeight: '4rem', lineHeight: 1 }}>
+              {liveKaomoji}
+            </div>
+          </div>
+          
+          <h6 className="fw-bold mb-3">Customize Kaomoji</h6>
+          <div className="row g-3">
+            <div className="col-6 col-md-4"><Dropdown label="Accessory" options={accessories} value={accessory} onChange={setAccessory} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Left Side" options={leftSides} value={leftSide} onChange={setLeftSide} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Left Cheek" options={cheeks} value={leftCheek} onChange={setLeftCheek} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Left Eye" options={leftEyes} value={leftEye} onChange={setLeftEye} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Mouth" options={mouths} value={mouth} onChange={setMouth} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Right Eye" options={rightEyes} value={rightEye} onChange={setRightEye} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Right Cheek" options={cheeks} value={rightCheek} onChange={setRightCheek} /></div>
+            <div className="col-6 col-md-4"><Dropdown label="Right Side" options={rightSides} value={rightSide} onChange={setRightSide} /></div>
+          </div>
+          
+          <div className="mt-3">
+            <label className="form-label fw-bold">Background Color</label>
+            <div className="d-flex align-items-center gap-3">
+              <input
+                type="color"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+                className="form-control form-control-color"
+                style={{ width: '60px' }}
+              />
+              <span className="text-muted small">{bgColor}</span>
+            </div>
           </div>
         </div>
-        
-        <Dropdown label="Accessory" options={accessories} value={accessory} onChange={setAccessory} />
-        <Dropdown label="Left Side" options={leftSides} value={leftSide} onChange={setLeftSide} />
-        <Dropdown label="Left Cheek" options={cheeks} value={leftCheek} onChange={setLeftCheek} />
-        <Dropdown label="Left Eye" options={leftEyes} value={leftEye} onChange={setLeftEye} />
-        <Dropdown label="Mouth" options={mouths} value={mouth} onChange={setMouth} />
-        <Dropdown label="Right Eye" options={rightEyes} value={rightEye} onChange={setRightEye} />
-        <Dropdown label="Right Cheek" options={cheeks} value={rightCheek} onChange={setRightCheek} />
-        <Dropdown label="Right Side" options={rightSides} value={rightSide} onChange={setRightSide} />
-        
-        <div className="mb-3">
-          <label>Background Color</label>
-          <input
-            type="color"
-            value={bgColor}
-            onChange={(e) => setBgColor(e.target.value)}
-            className="form-control form-control-color"
-          />
-        </div>
-        
-        <div className="d-flex justify-content-end gap-2">
+
+        {/* Footer */}
+        <div className="p-4 border-top bg-light d-flex justify-content-end gap-2 rounded-bottom">
           <button
             className="btn btn-outline-secondary"
             onClick={() => setIsOpen(false)}
@@ -273,7 +288,7 @@ const EditComposer = forwardRef<EditComposerRef, EditComposerProps>(function Edi
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Saving...' : 'Save'}
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </div>

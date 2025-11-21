@@ -76,7 +76,7 @@ export default function AuthPage() {
       if (isLogin) {
         // Login flow - just email and password
         await signInWithEmailAndPassword(auth, email, password);
-        router.push('/account');
+        router.push('/home');
       } else {
         // Signup flow - validate all fields
         
@@ -148,7 +148,7 @@ export default function AuthPage() {
           });
         }
         
-        router.push('/account');
+        router.push('/home');
       }
     } catch (err: any) {
       console.error('Auth error:', err);

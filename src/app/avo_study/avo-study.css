@@ -181,6 +181,63 @@
   margin-bottom: 0.5rem;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inbox-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--primary-green);
+  border-radius: 12px;
+  background: white;
+  color: var(--primary-green);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.inbox-button:hover {
+  background: var(--primary-green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 155, 126, 0.3);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--coral);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(232, 155, 142, 0.5);
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 .map-view-button {
   display: flex;
   align-items: center;
@@ -481,6 +538,13 @@
     font-size: 1.75rem;
   }
 
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .inbox-button,
   .map-view-button {
     width: 100%;
     justify-content: center;

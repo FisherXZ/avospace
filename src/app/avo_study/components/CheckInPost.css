@@ -1,18 +1,18 @@
 /* Check-In Post Component */
 
 .checkin-post-card {
-  background: white;
-  border: 2px solid #E5E5E5;
-  border-radius: 12px;
+  background: var(--background-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
   padding: 20px;
   margin: 16px 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
 }
 
 .checkin-post-card:hover {
-  border-color: #5B9B7E;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-green);
+  box-shadow: var(--shadow-md);
 }
 
 /* User Header */
@@ -23,13 +23,13 @@
   margin-bottom: 16px;
   cursor: pointer;
   padding-bottom: 12px;
-  border-bottom: 1px solid #F5F5F5;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .checkin-post-kao {
   font-size: 32px;
   line-height: 1;
-  transition: transform 0.2s ease;
+  transition: transform var(--transition-fast);
 }
 
 .checkin-post-header:hover .checkin-post-kao {
@@ -43,18 +43,18 @@
 .checkin-post-username {
   font-size: 16px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 2px;
 }
 
 .checkin-post-date {
   font-size: 14px;
-  color: #6B7280;
+  color: var(--text-muted);
 }
 
 .checkin-expired-badge {
-  background: #E5E5E5;
-  color: #6B7280;
+  background: #E5E7EB;
+  color: #374151;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
@@ -90,7 +90,7 @@
 .location-name {
   font-size: 18px;
   font-weight: 700;
-  color: #4A6B4A;
+  color: var(--forest-green);
 }
 
 .checkin-post-status-row {
@@ -112,16 +112,16 @@
 }
 
 .status-badge-post.status-coral {
-  background: #E89B8E;
+  background: var(--coral);
 }
 
 .status-badge-post.status-sky-blue {
-  background: #A8C8E8;
+  background: var(--sky-blue);
 }
 
 .status-badge-post.status-yellow {
-  background: #F4F0B8;
-  color: #374151;
+  background: var(--yellow-highlight);
+  color: var(--text-secondary);
 }
 
 .status-badge-post.status-red {
@@ -137,7 +137,7 @@
 }
 
 .status-badge-post.status-green {
-  background: #7A9A7A;
+  background: var(--sage-green);
 }
 
 .checkin-post-note {
@@ -145,9 +145,9 @@
   align-items: flex-start;
   gap: 8px;
   padding: 12px;
-  background: #F5F5F5;
-  border-radius: 8px;
-  border-left: 3px solid #5B9B7E;
+  background: var(--background-subtle);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--primary-green);
 }
 
 .note-icon {
@@ -158,14 +158,14 @@
 
 .note-text {
   font-size: 15px;
-  color: #374151;
+  color: var(--text-secondary);
   font-style: italic;
   line-height: 1.5;
 }
 
 /* Send Request Button - Compact Inline Version */
 .send-request-button {
-  background: #5B9B7E;
+  background: var(--primary-green);
   color: white;
   border: none;
   border-radius: 20px;
@@ -176,13 +176,13 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
   white-space: nowrap;
   margin-left: auto;
 }
 
 .send-request-button:hover {
-  background: #4A8A6D;
+  background: var(--forest-green);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(91, 155, 126, 0.3);
 }
@@ -198,10 +198,10 @@
 .checkin-expired-message {
   margin-top: 8px;
   padding: 12px;
-  background: #F5F5F5;
-  border-radius: 8px;
+  background: var(--background-subtle);
+  border-radius: var(--radius-sm);
   text-align: center;
-  color: #6B7280;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -209,7 +209,37 @@
 .checkin-post-loading {
   padding: 20px;
   text-align: center;
-  color: #6B7280;
+  color: var(--text-muted);
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast-success {
+  background: var(--primary-green);
+  color: white;
 }
 
 /* Responsive */
@@ -249,4 +279,3 @@
     margin-left: 0;
   }
 }
-
