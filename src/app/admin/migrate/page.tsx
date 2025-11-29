@@ -11,6 +11,14 @@ interface SpotUpdate {
   longitude: number;
 }
 
+interface StudySpot {
+  id: string;
+  name?: string;
+  latitude?: number;
+  longitude?: number;
+  [key: string]: any; // Allow other Firestore fields
+}
+
 const updates: SpotUpdate[] = [
   { id: 'doe-library', latitude: 37.8722, longitude: -122.2591 },
   { id: 'moffitt-library', latitude: 37.8726, longitude: -122.2608 },
@@ -24,7 +32,7 @@ export default function MigratePage() {
   const [status, setStatus] = useState<string>('');
   const [logs, setLogs] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [verificationData, setVerificationData] = useState<any[]>([]);
+  const [verificationData, setVerificationData] = useState<StudySpot[]>([]);
 
   const addLog = (message: string) => {
     setLogs(prev => [...prev, message]);
@@ -71,7 +79,7 @@ export default function MigratePage() {
 
     try {
       const snapshot = await getDocs(collection(db, 'study_spots'));
-      const spots = snapshot.docs.map(doc => ({
+      const spots: StudySpot[] = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));

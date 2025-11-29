@@ -2816,6 +2816,39 @@ export async function getUserData(userId: string) {
 }
 ```
 
+### Map Feature (✅ Complete)
+
+**Implementation:** Interactive campus map showing study spots and real-time check-ins
+
+**Key Components:**
+- `/src/app/map/` - Map feature directory
+  - `LeafletMap.tsx` - Core Leaflet integration with real-time data
+  - `MapMarkerOverlay.tsx` - Custom popup showing users at each spot
+  - `MapUserAvatar.tsx` - User avatars on map markers
+  - `MapOverlay.tsx` - UI controls overlay
+
+**Data Integration:**
+- Study spots include `latitude` and `longitude` fields (added to schema)
+- Real-time listener fetches active check-ins grouped by spot
+- Custom markers show up to 3 users with "+N more" for additional users
+- Click username → opens `UserDetailModal` (reused from avo_study)
+- Study requests can be sent directly from map
+
+**Berkeley Coordinates:**
+| Spot | Latitude | Longitude |
+|------|----------|-----------|
+| Doe Library | 37.8722 | -122.2591 |
+| Moffitt Library | 37.8726 | -122.2608 |
+| Main Stacks | 37.8727 | -122.2601 |
+| MLK Student Union | 37.8699 | -122.2585 |
+| Kresge Engineering | 37.8745 | -122.2570 |
+
+**Migration Tool:**
+- `/src/app/admin/migrate/page.tsx` - Admin UI for updating study spot coordinates
+- One-click migration with verification
+
+---
+
 ### Future Features
 
 **Phase 2 (Post-MVP):**
@@ -2824,6 +2857,7 @@ export async function getUserData(userId: string) {
 - [ ] Direct messaging between users
 - [ ] Study spot ratings & reviews
 - [ ] Calendar integration (Google Calendar sync)
+- [ ] Enhanced map features (clustering, filters, custom icons)
 
 **Phase 3 (Long-Term):**
 - [ ] Course-specific study groups
