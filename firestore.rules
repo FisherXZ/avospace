@@ -49,7 +49,7 @@ service cloud.firestore {
     // STUDY SPOTS - READ ONLY (ADMIN MANAGED)
     // ============================================
     match /study_spots/{spotId} {
-      allow read: if isSignedIn();
+      allow read: if true; // Temporarily allow public read for testing
       allow write: if false; // Admin only via Firebase Console
     }
     
@@ -106,6 +106,32 @@ service cloud.firestore {
       // Only owner can update/delete their posts
       allow update, delete: if isSignedIn() 
         && resource.data.uid == request.auth.uid;
+    }
+    
+    // ============================================
+    // STUDY SESSIONS - HISTORICAL RECORDS
+    // ============================================
+    match /study_sessions/{sessionId} {
+      // Anyone can read sessions (for history display)
+      allow read: if isSignedIn();
+      
+      // Users can create their own session records
+      allow create: if isSignedIn() 
+        && request.resource.data.userId == request.auth.uid;
+      
+      // Sessions are immutable - no updates or deletes
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // USER STATS - AGGREGATED METRICS
+    // ============================================
+    match /user_stats/{userId} {
+      // Anyone can read stats (for leaderboards and profiles)
+      allow read: if isSignedIn();
+      
+      // Only owner can write their own stats
+      allow write: if isOwner(userId);
     }
   }
 }

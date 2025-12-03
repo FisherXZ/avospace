@@ -61,8 +61,6 @@ export default function UserDetailModal({
     <div className="user-detail-modal-portal">
       <div className="user-detail-modal-backdrop" onClick={onClose} />
       <div className="user-detail-modal">
-        <button className="close-btn" onClick={onClose}>×</button>
-        
         <div className="user-detail-header">
           <div 
             className="user-detail-avatar"

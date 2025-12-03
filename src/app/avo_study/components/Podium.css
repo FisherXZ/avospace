@@ -1,0 +1,346 @@
+/* ============================================
+   PODIUM COMPONENT
+   Animated top-3 display with staggered entrance
+   ============================================ */
+
+.podium-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 24px 32px;
+  margin-bottom: 32px;
+}
+
+/* ============================================
+   PODIUM ENTRIES
+   ============================================ */
+
+.podium-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.podium-entry:hover {
+  transform: translateY(-4px);
+}
+
+/* Staggered entrance animations */
+.podium-second {
+  animation: slideUp 0.5s ease-out 0.1s both;
+}
+
+.podium-third {
+  animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+.podium-first {
+  animation: slideUp 0.6s ease-out 0.4s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   CROWN & MEDALS
+   ============================================ */
+
+.podium-crown {
+  color: #D4AF37;
+  filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.3));
+  animation: crownBounce 2s ease-in-out infinite;
+}
+
+@keyframes crownBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.podium-medal {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.podium-medal.silver {
+  color: #A0A0A0;
+}
+
+.podium-medal.bronze {
+  color: #CD7F32;
+}
+
+.medal-number {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   AVATAR
+   ============================================ */
+
+.podium-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: white;
+  border: 3px solid #e5e5e5;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.podium-entry:hover .podium-avatar {
+  border-color: var(--forest-green, #4A6B4A);
+  transform: scale(1.05);
+}
+
+.podium-avatar.first-place {
+  width: 88px;
+  height: 88px;
+  border-color: #D4AF37;
+  box-shadow: 
+    0 4px 16px rgba(212, 175, 55, 0.25),
+    0 0 0 4px rgba(212, 175, 55, 0.1);
+}
+
+.podium-kao {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #2C3E50;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ============================================
+   INFO SECTION
+   ============================================ */
+
+.podium-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.podium-username {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  letter-spacing: -0.01em;
+}
+
+.podium-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--forest-green, #4A6B4A);
+  letter-spacing: -0.02em;
+}
+
+.podium-first .podium-value {
+  font-size: 22px;
+}
+
+.podium-tier {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   STAND PLATFORMS
+   ============================================ */
+
+.podium-stand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 100px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  border: 1px solid #e0e0e0;
+  border-bottom: none;
+  position: relative;
+  margin-top: 8px;
+}
+
+.stand-rank {
+  font-size: 24px;
+  font-weight: 700;
+  color: #c0c0c0;
+  opacity: 0.5;
+}
+
+.stand-first {
+  height: 80px;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FDF3D0 100%);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.stand-first .stand-rank {
+  color: #D4AF37;
+  font-size: 28px;
+}
+
+.stand-second {
+  height: 56px;
+  background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+}
+
+.stand-second .stand-rank {
+  color: #A0A0A0;
+}
+
+.stand-third {
+  height: 40px;
+  background: linear-gradient(135deg, #FDF5EE 0%, #F5E6D8 100%);
+  border-color: rgba(205, 127, 50, 0.2);
+}
+
+.stand-third .stand-rank {
+  color: #CD7F32;
+}
+
+/* ============================================
+   FIRST PLACE GLOW EFFECT
+   ============================================ */
+
+.first-place-glow {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: pulse 2.5s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 640px) {
+  .podium-container {
+    gap: 8px;
+    padding: 32px 16px 24px;
+  }
+  
+  .podium-avatar {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .podium-avatar.first-place {
+    width: 68px;
+    height: 68px;
+  }
+  
+  .podium-crown svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .podium-username {
+    font-size: 12px;
+  }
+  
+  .podium-value {
+    font-size: 15px;
+  }
+  
+  .podium-first .podium-value {
+    font-size: 18px;
+  }
+  
+  .podium-stand {
+    min-width: 80px;
+  }
+  
+  .stand-first {
+    height: 64px;
+  }
+  
+  .stand-second {
+    height: 44px;
+  }
+  
+  .stand-third {
+    height: 32px;
+  }
+  
+  .stand-rank {
+    font-size: 18px;
+  }
+  
+  .stand-first .stand-rank {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 400px) {
+  .podium-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .podium-entry {
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .podium-stand {
+    display: none;
+  }
+  
+  .podium-info {
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .first-place-glow {
+    display: none;
+  }
+}
+

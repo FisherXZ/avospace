@@ -1,0 +1,496 @@
+/* ============================================
+   TIERS SHOWCASE PAGE
+   League of Legends-inspired tier display
+   ============================================ */
+
+.tiers-page {
+  min-height: 100vh;
+  background: #fafafa;
+  padding: 88px 24px 80px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tiers-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Loading state */
+.app-shell .tiers-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+  gap: 20px;
+}
+
+.loading-spinner {
+  color: var(--forest-green, #4A6B4A);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--text-secondary, #737373);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.tiers-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tiers-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary, #171717);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.025em;
+}
+
+.tiers-title svg {
+  color: #D4AF37;
+}
+
+.tiers-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary, #737373);
+  margin: 0;
+}
+
+/* ============================================
+   USER PROGRESS CARD
+   ============================================ */
+
+.user-progress-card {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 48px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.current-tier-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.current-tier-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #737373);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.current-tier-name {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.xp-display {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.xp-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--forest-green, #4A6B4A);
+  letter-spacing: -0.02em;
+}
+
+.coins-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary, #737373);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Coin icon styling */
+.coin-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.progress-section {
+  margin-top: 20px;
+}
+
+.progress-bar-wrapper {
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.progress-labels > span:first-child {
+  color: var(--text-primary, #171717);
+  font-weight: 500;
+}
+
+.xp-remaining {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary, #737373);
+}
+
+/* ============================================
+   TIERS SHOWCASE
+   ============================================ */
+
+.tiers-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
+  align-items: flex-end;
+  padding: 40px 0;
+}
+
+.tier-podium {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: podiumRise 0.6s ease-out both;
+  animation-delay: calc(var(--tier-index) * 0.1s);
+}
+
+@keyframes podiumRise {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tier-content {
+  position: relative;
+  width: 100%;
+  padding: 32px 20px 24px;
+  border-radius: 16px 16px 0 0;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.tier-podium:hover .tier-content {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.tier-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  margin-bottom: 16px;
+}
+
+.tier-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+}
+
+.tier-requirement {
+  font-size: 13px;
+  color: var(--text-secondary, #737373);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Current Tier Highlight */
+.tier-podium.current-tier .tier-content {
+  border-color: var(--forest-green, #4A6B4A);
+  box-shadow: 0 4px 16px rgba(74, 107, 74, 0.15);
+}
+
+.you-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 16px;
+  background: var(--forest-green, #4A6B4A);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 12px;
+}
+
+/* Unlocked State */
+.tier-podium.unlocked .tier-icon-wrapper {
+  opacity: 1;
+}
+
+.tier-podium:not(.unlocked) .tier-icon-wrapper {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+/* Podium Stand */
+.podium-stand {
+  width: 100%;
+  border-radius: 0 0 12px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: none;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tier-podium:hover .podium-stand {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+}
+
+/* Legend Tier Special Effects */
+.legend-glow {
+  position: absolute;
+  inset: -24px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: legendPulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.tier-podium:nth-child(6) .podium-stand {
+  background: linear-gradient(135deg, #FDF8E8 0%, #F9EDCE 30%, #F5E2B4 60%, #F0D79A 100%) !important;
+  border-top: 4px solid #D4AF37 !important;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35), inset 0 2px 8px rgba(212, 175, 55, 0.15);
+}
+
+.tier-podium:nth-child(6) .tier-icon-wrapper {
+  animation: legendFloat 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.6));
+}
+
+@keyframes legendFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes legendPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Seedling Tier - Subtle Growth */
+.tier-podium:nth-child(1) .podium-stand {
+  background: linear-gradient(135deg, #F0F5F0 0%, #E5EDE5 100%) !important;
+  border-top: 2px solid #9CB99C !important;
+}
+
+/* Studier Tier - Learning */
+.tier-podium:nth-child(2) .podium-stand {
+  background: linear-gradient(135deg, #EBF2EB 0%, #DDE9DD 100%) !important;
+  border-top: 2px solid #7A9A7A !important;
+}
+
+/* Scholar Tier - Knowledge */
+.tier-podium:nth-child(3) .podium-stand {
+  background: linear-gradient(135deg, #E5EDE5 0%, #D8E3D8 100%) !important;
+  border-top: 3px solid #4A6B4A !important;
+  box-shadow: 0 2px 12px rgba(74, 107, 74, 0.15), inset 0 2px 8px rgba(74, 107, 74, 0.08);
+}
+
+/* Grinder Tier - Fiery Effects */
+.tier-podium:nth-child(4) .tier-icon-wrapper {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+.tier-podium:nth-child(4) .podium-stand {
+  background: linear-gradient(135deg, #FFF3E6 0%, #FFE0C4 50%, #FFD1A3 100%) !important;
+  border-top: 3px solid #E85D04 !important;
+  box-shadow: 0 4px 16px rgba(232, 93, 4, 0.2), inset 0 2px 8px rgba(232, 93, 4, 0.1);
+}
+
+@keyframes subtlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* Master Tier - Mystical Effects */
+.tier-podium:nth-child(5) .tier-icon-wrapper {
+  position: relative;
+}
+
+.tier-podium:nth-child(5) .tier-icon-wrapper::after {
+  content: '✨';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.tier-podium:nth-child(5) .podium-stand {
+  background: linear-gradient(135deg, #F3E8FF 0%, #E4D3FF 50%, #D5BFFF 100%) !important;
+  border-top: 3px solid #7B2CBF !important;
+  box-shadow: 0 4px 16px rgba(123, 44, 191, 0.25), inset 0 2px 8px rgba(123, 44, 191, 0.1);
+}
+
+.tier-podium:nth-child(5) .tier-icon-wrapper {
+  animation: masterGlow 3s ease-in-out infinite;
+}
+
+@keyframes masterGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(123, 44, 191, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(123, 44, 191, 0.7));
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .tiers-showcase {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tiers-page {
+    padding: 72px 16px 60px;
+  }
+
+  .tiers-header {
+    margin-bottom: 32px;
+  }
+
+  .tiers-title {
+    font-size: 26px;
+  }
+
+  .tiers-subtitle {
+    font-size: 14px;
+  }
+
+  .user-progress-card {
+    padding: 24px 20px;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .xp-display {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .tiers-showcase {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .tier-content {
+    padding: 24px 16px 20px;
+  }
+
+  .tier-name {
+    font-size: 16px;
+  }
+
+  .tier-requirement {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tiers-showcase {
+    grid-template-columns: 1fr;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  
+  .current-tier-info {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+

@@ -2,10 +2,12 @@
 import Post from '../../../components/Post';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { collection, getDocs, DocumentData, query, where } from 'firebase/firestore';
+import { collection, getDocs, DocumentData, query, where, orderBy } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
+import { Loader2, Leaf, Users } from 'lucide-react';
+import './home.css';
 
 function SidebarHomeIcon() {
   return (
@@ -22,44 +24,6 @@ function SidebarHomeIcon() {
   );
 }
 
-function SidebarUsersIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M16.5 11a3.5 3.5 0 1 0-2.96-5.33"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M7.5 13a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3 20.25c.8-1.8 2.64-3.25 4.5-3.25s3.7 1.45 4.5 3.25"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.5 17c2 0 3.8 1.2 4.5 3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function SidebarStudyIcon() {
   return (
@@ -80,6 +44,33 @@ function SidebarStudyIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+function SidebarMapIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <polygon 
+        points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" strokeWidth="1.7" />
+      <line x1="16" y1="6" x2="16" y2="22" stroke="currentColor" strokeWidth="1.7" />
+    </svg>
+  );
+}
+
+function SidebarStatsIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
     </svg>
   );
 }
@@ -136,7 +127,16 @@ export default function Home() {
         }
       }
       
+      // Sort by createdAt timestamp (newest first), with fallback to date string
       friendsPostsData.sort((a, b) => {
+        // Prioritize createdAt if available
+        if (a.createdAt && b.createdAt) {
+          return b.createdAt.toMillis() - a.createdAt.toMillis();
+        }
+        if (a.createdAt && !b.createdAt) return -1;
+        if (!a.createdAt && b.createdAt) return 1;
+        
+        // Fallback to date string for old posts
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
         if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
@@ -155,12 +155,24 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
-        const q = query(collection(db, 'posts'));
-        const snapshot = await getDocs(q);
+        // Query all posts (no orderBy to include posts without createdAt)
+        const snapshot = await getDocs(collection(db, 'posts'));
         let posts = snapshot.docs.map(d => d.data());
         
+        // Client-side sort - prioritize posts with createdAt, then fall back to date string
         posts.sort((a, b) => {
+          // If both have createdAt timestamps
+          if (a.createdAt && b.createdAt) {
+            return b.createdAt.toMillis() - a.createdAt.toMillis();
+          }
+          
+          // If only one has createdAt, prioritize it
+          if (a.createdAt && !b.createdAt) return -1;
+          if (!a.createdAt && b.createdAt) return 1;
+          
+          // If neither has createdAt, fall back to date string
           const dateA = new Date(a.date);
           const dateB = new Date(b.date);
           if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
@@ -172,9 +184,14 @@ export default function Home() {
         setPosts(posts);
       } catch (err: any) {
         setError(err?.message || 'Failed to load posts');
+      } finally {
+        setLoading(false);
       }
     };
     fetchPosts();
+  }, []);
+
+  useEffect(() => {
     const getUserInfo = async () => {
       try {
         if (user != null) {
@@ -191,8 +208,7 @@ export default function Home() {
       }
     }
     getUserInfo();
-    setLoading(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (activeTab === 'friends' && user?.uid) {
@@ -215,15 +231,6 @@ export default function Home() {
             <span className="app-sidebar-label">Home</span>
           </li>
           <li
-            className={`app-sidebar-item ${activeTab === 'friends' ? 'app-sidebar-item-active' : ''}`}
-            onClick={() => setActiveTab('friends')}
-          >
-            <span className="app-sidebar-icon">
-              <SidebarUsersIcon />
-            </span>
-            <span className="app-sidebar-label">Friends</span>
-          </li>
-          <li
             className="app-sidebar-item"
             onClick={() => router.push('/avo_study')}
           >
@@ -232,30 +239,43 @@ export default function Home() {
             </span>
             <span className="app-sidebar-label">Avo Study</span>
           </li>
+          <li
+            className="app-sidebar-item"
+            onClick={() => router.push('/map')}
+          >
+            <span className="app-sidebar-icon">
+              <SidebarMapIcon />
+            </span>
+            <span className="app-sidebar-label">Map</span>
+          </li>
+          <li
+            className="app-sidebar-item"
+            onClick={() => router.push('/avo_study/stats')}
+          >
+            <span className="app-sidebar-icon">
+              <SidebarStatsIcon />
+            </span>
+            <span className="app-sidebar-label">Statistics</span>
+          </li>
         </ul>
       </aside>
 
       {/* Main content */}
-      <div className="page-container-wide">
-        <div className="d-flex justify-content-center">
-          <section style={{ width: '100%', maxWidth: 600 }}>
-            {/* Modern Tab Switcher */}
-            <div className="d-flex align-items-center justify-content-center mb-5">
-              <div 
-                className="d-inline-flex p-1 rounded-pill bg-white border shadow-sm"
-                style={{ minWidth: '240px' }}
-              >
+      <div className="home-page-container">
+        <div className="home-content-wrapper">
+          <section className="feed-section">
+            {/* Tab Switcher */}
+            <div className="tab-switcher-wrapper">
+              <div className="tab-switcher">
                 <button
-                  className={`btn btn-sm rounded-pill flex-fill fw-bold ${activeTab === 'home' ? 'btn-primary' : 'text-muted'}`}
+                  className={`tab-button ${activeTab === 'home' ? 'active' : ''}`}
                   onClick={() => setActiveTab('home')}
-                  style={{ transition: 'all 0.2s ease' }}
                 >
                   For You
                 </button>
                 <button
-                  className={`btn btn-sm rounded-pill flex-fill fw-bold ${activeTab === 'friends' ? 'btn-primary' : 'text-muted'}`}
+                  className={`tab-button ${activeTab === 'friends' ? 'active' : ''}`}
                   onClick={() => setActiveTab('friends')}
-                  style={{ transition: 'all 0.2s ease' }}
                 >
                   Friends
                 </button>
@@ -263,26 +283,33 @@ export default function Home() {
             </div>
 
             {activeTab === 'home' && (
-              <div style={{ animation: 'fadeIn 0.3s ease' }}>
+              <div className="tab-content">
                 {loading && (
-                  <div className="text-center py-5">
-                    <div className="spinner-border text-success mb-3" role="status"></div>
-                    <p className="text-muted-soft">Loading your feed...</p>
+                  <div className="loading-state">
+                    <Loader2 className="loading-spinner" size={40} />
+                    <p className="loading-text">Loading your feed...</p>
                   </div>
                 )}
-                {error && <div className="alert alert-danger rounded-4">{error}</div>}
+                {error && (
+                  <div className="error-state">
+                    <p className="error-message">{error}</p>
+                  </div>
+                )}
                 
                 {!loading && !error && (
                   posts.length > 0 ? (
-                    posts.map((doc, idx) => (
-                      <div key={idx} className="mb-4">
-                        <Post {...doc} />
-                      </div>
-                    ))
+                    <div className="posts-list">
+                      {posts.map((doc, idx) => (
+                        <div key={idx} className="post-wrapper">
+                          <Post {...doc} />
+                        </div>
+                      ))}
+                    </div>
                   ) : (
-                    <div className="text-center py-5 text-muted-soft">
-                      <p className="fs-1 mb-3">🍃</p>
-                      <p>It's quiet here.</p>
+                    <div className="empty-state">
+                      <Leaf className="empty-icon" size={64} strokeWidth={1.5} />
+                      <h3>All Caught Up</h3>
+                      <p>No new posts at the moment</p>
                     </div>
                   )
                 )}
@@ -290,28 +317,28 @@ export default function Home() {
             )}
 
             {activeTab === 'friends' && (
-              <div style={{ animation: 'fadeIn 0.3s ease' }}>
+              <div className="tab-content">
                 {friendsLoading && (
-                  <div className="text-center py-5">
-                    <div className="spinner-border text-success mb-3" role="status"></div>
-                    <p className="text-muted-soft">Loading friends' posts...</p>
+                  <div className="loading-state">
+                    <Loader2 className="loading-spinner" size={40} />
+                    <p className="loading-text">Loading friends' posts...</p>
                   </div>
                 )}
                 
                 {!friendsLoading && (
                   friendsPosts.length > 0 ? (
-                    friendsPosts.map((doc, idx) => (
-                      <div key={idx} className="mb-4">
-                        <Post {...doc} />
-                      </div>
-                    ))
+                    <div className="posts-list">
+                      {friendsPosts.map((doc, idx) => (
+                        <div key={idx} className="post-wrapper">
+                          <Post {...doc} />
+                        </div>
+                      ))}
+                    </div>
                   ) : (
-                    <div className="text-center py-5 bg-white rounded-4 border border-light shadow-sm">
-                      <p className="fs-1 mb-3">🥑</p>
-                      <h5 className="fw-bold text-dark mb-2">No friends posts yet</h5>
-                      <p className="text-muted mb-0">
-                        Add friends to see what they're up to!
-                      </p>
+                    <div className="empty-state">
+                      <Users className="empty-icon" size={64} strokeWidth={1.5} />
+                      <h3>No Friends Posts Yet</h3>
+                      <p>Add friends to see what they're up to</p>
                     </div>
                   )
                 )}

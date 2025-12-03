@@ -126,14 +126,8 @@ export default function StudySpotCard({ spot }: StudySpotCardProps) {
               : 'linear-gradient(to right, rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0))' 
           }}
         >
-          <div className="d-flex justify-content-between align-items-start mb-2">
+          <div className="mb-2">
             <h3 className="h5 fw-bold mb-0 text-dark">{spot.name}</h3>
-            <span 
-              className={`badge rounded-pill ${isOpen ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-muted'}`}
-              style={{ fontSize: '0.75rem', fontWeight: 600 }}
-            >
-              {isOpen ? 'Open' : 'Closed'}
-            </span>
           </div>
           
           <div className="d-flex align-items-center text-muted-soft" style={{ fontSize: '0.9rem' }}>

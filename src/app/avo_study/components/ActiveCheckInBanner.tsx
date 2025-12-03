@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { CheckIn } from '@/types/study';
+import { recordStudySession } from '../utils/statsManager';
 import './ActiveCheckInBanner.css';
 
 interface ActiveCheckInData extends CheckIn {
@@ -89,9 +90,14 @@ export default function ActiveCheckInBanner() {
 
     setCheckingOut(true);
     try {
+      // Record the study session before marking inactive
+      await recordStudySession(activeCheckIn, true); // true = manual checkout
+      
+      // Mark check-in as inactive
       await updateDoc(doc(db, 'check_ins', activeCheckIn.id), {
         isActive: false
       });
+      
       setActiveCheckIn(null);
     } catch (err) {
       console.error('Error checking out:', err);

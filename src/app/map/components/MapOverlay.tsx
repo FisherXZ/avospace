@@ -86,20 +86,6 @@ export default function MapOverlay() {
           </li>
         </ul>
       </aside>
-
-      {/* Map Info Card */}
-      <div className="map-info-card">
-        <h3 className="map-info-title">Study Spots Map</h3>
-        <p className="map-info-subtitle">
-          Explore study locations on campus
-        </p>
-        <button 
-          className="map-roster-btn"
-          onClick={() => router.push('/avo_study')}
-        >
-          📋 View All Spots
-        </button>
-      </div>
     </>
   );
 }

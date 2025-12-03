@@ -26,6 +26,11 @@ firestore (database)
 │   ├── {auto-id}
 │   └── ...
 │
+├── posts/                    [dynamic, social feed]
+│   ├── {auto-id}
+│   ├── {auto-id}
+│   └── ...
+│
 └── users/                    [existing collection]
     ├── {user-uid}
     ├── {user-uid}
@@ -192,7 +197,70 @@ firestore (database)
 
 ---
 
-### 4️⃣ users (enhanced)
+### 4️⃣ posts
+
+**Purpose**: Social feed posts from check-ins and user activity  
+**Total Documents**: Variable (grows with user activity)  
+**Created By**: System (on check-in) or users  
+**Updated By**: Post owner (likes, edits)  
+**Deleted By**: Post owner or admin
+
+```typescript
+{
+  // Document ID: auto-generated
+  
+  type: string,             // "checkin" | "regular"
+  text: string,             // Post content/caption
+  date: string,             // Human-readable date (e.g., "11/3/2025") - for display
+  createdAt: Timestamp,     // Post creation time - for sorting
+  likes: number,            // Like count (default: 0)
+  uid: string,              // Author's user ID (FK to users)
+  
+  // Check-in specific fields (when type === "checkin")
+  checkInId?: string,       // Reference to check_ins document
+  spotId?: string,          // Reference to study_spots document
+  spotName?: string,        // Denormalized spot name for display
+  status?: string,          // "open" | "solo"
+  statusNote?: string,      // Optional status message
+  expiresAt?: Timestamp     // When check-in expires
+}
+```
+
+**Storage**: ~300-500 bytes per document (varies with content)  
+**Indexes**: 
+- Single field: `createdAt` (descending) - for feed sorting
+
+**Example Document (Check-in Post)**:
+```json
+{
+  "type": "checkin",
+  "text": "Checked in to Doe Library",
+  "date": "11/3/2025",
+  "createdAt": { "_seconds": 1700000000, "_nanoseconds": 0 },
+  "likes": 0,
+  "uid": "abc123xyz",
+  "checkInId": "checkin_xyz789",
+  "spotId": "doe-library",
+  "spotName": "Doe Library",
+  "status": "open",
+  "statusNote": "Working on CS 61A midterm",
+  "expiresAt": { "_seconds": 1700007200, "_nanoseconds": 0 }
+}
+```
+
+**Lifecycle**:
+1. User checks in → System creates check-in post automatically
+2. Post appears in "For You" and "Friends" feeds
+3. Posts are sorted by `createdAt` (newest first)
+4. [Future] User can create regular text posts
+
+**Sorting**:
+- Primary: `createdAt` Timestamp (server-side via Firestore `orderBy`)
+- Fallback: `date` string (client-side for backwards compatibility)
+
+---
+
+### 5️⃣ users (enhanced)
 
 **Purpose**: User profiles with enhanced identity and contact info  
 **Total Documents**: Variable  

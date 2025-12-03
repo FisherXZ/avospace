@@ -12,6 +12,8 @@ export interface StudySpot {
   id: string;                    // Firestore document ID (e.g., "doe-library")
   name: string;                  // Display name (e.g., "Doe Library")
   hours: string;                 // Operating hours (e.g., "8:00 AM - 12:00 AM")
+  latitude: number;              // Geographic latitude for map display
+  longitude: number;             // Geographic longitude for map display
 }
 
 /**
@@ -72,7 +74,8 @@ export type PostType = 'regular' | 'checkin';
 export interface Post {
   id?: string;                   // Firestore document ID
   text: string;                  // Post content
-  date: string;                  // Date string (e.g., "11/18/2024")
+  date: string;                  // Date string (e.g., "11/18/2024") - for display
+  createdAt?: Timestamp;         // Post creation timestamp - for sorting and time display
   likes: number;                 // Like count
   uid: string;                   // Author user ID
   type?: PostType;               // Post type (default: 'regular')
@@ -204,3 +207,200 @@ export const STATUS_OPTIONS = [
   { value: 'break' as const, label: 'On a break', emoji: '☕', description: 'Taking a break' },
 ] as const;
 
+// ============================================
+// STUDY HISTORY & METRICS TYPES
+// ============================================
+
+/**
+ * Study Session - Historical record of completed study session
+ */
+export interface StudySession {
+  id: string;                    // Firestore document ID
+  userId: string;                // Who studied
+  spotId: string;                // Where they studied
+  status: CheckInStatus;         // Their study mode
+  statusNote?: string;           // Optional note
+  startedAt: Timestamp;          // When they checked in
+  endedAt: Timestamp;            // When session ended (checkout or expiry)
+  duration: number;              // Actual duration in minutes
+  wasManualCheckout: boolean;    // true = manual, false = auto-expired
+  createdAt: Timestamp;          // For sorting/indexing
+}
+
+/**
+ * User Statistics - Aggregated metrics per user
+ */
+export interface UserStats {
+  userId: string;                // Document ID = user ID
+  
+  // Overall Stats
+  totalSessions: number;         // All-time check-in count
+  totalMinutes: number;          // All-time study minutes
+  totalHours: number;            // Computed: totalMinutes / 60
+  totalXP: number;               // Lifetime XP earned
+  coins: number;                 // AvoCoins balance (totalXP / 5)
+  
+  // Streaks
+  currentStreak: number;         // Consecutive days with check-ins
+  longestStreak: number;         // Best streak ever
+  lastStudyDate: string;         // YYYY-MM-DD for streak calculation
+  
+  // Favorites
+  favoriteSpot: string;          // Most visited spot ID
+  favoriteSpotCount: number;     // # of times at favorite spot
+  
+  // Per-Spot Breakdown
+  spotStats: {
+    [spotId: string]: {
+      sessionCount: number;
+      totalMinutes: number;
+      lastVisit: Timestamp;
+    };
+  };
+  
+  // Social
+  studyBuddies: {                // Who they've studied with
+    [userId: string]: number;    // # of times studied together
+  };
+  
+  // Time-based
+  lastUpdated: Timestamp;        // When stats were last recalculated
+  
+  // Monthly tracking (for charts)
+  monthlyMinutes: {              // Key: "YYYY-MM"
+    [month: string]: number;
+  };
+}
+
+/**
+ * Leaderboard Entry - Used for displaying rankings
+ */
+export interface LeaderboardEntry {
+  userId: string;
+  username: string;
+  kao: string;
+  totalSessions: number;
+  totalHours: number;
+  currentStreak: number;
+  favoriteSpot: string;
+  favoriteSpotName?: string;
+  rank?: number;
+  spotStats?: {
+    [spotId: string]: {
+      sessionCount: number;
+      totalMinutes: number;
+    };
+  };
+}
+
+/**
+ * Leaderboard Metric Type
+ */
+export type LeaderboardMetric = 'hours' | 'sessions' | 'streak';
+
+/**
+ * Leaderboard Timeframe
+ */
+export type LeaderboardTimeframe = 'week' | 'month' | 'alltime';
+
+// ============================================
+// RANK TIERS & ACHIEVEMENT BADGES
+// ============================================
+
+/**
+ * Tier Level - Based on total study hours
+ */
+export type TierLevel = 'seedling' | 'studier' | 'scholar' | 'grinder' | 'master' | 'legend';
+
+/**
+ * Tier Definition - Rank tier configuration
+ * Supports both hours-based and XP-based tier systems
+ */
+export interface Tier {
+  level: TierLevel;
+  name: string;
+  minHours?: number;          // Hours required (for hours-based system)
+  maxHours?: number;          // Hours cap (for hours-based system)
+  minXP?: number;             // XP required (for XP-based system)
+  maxXP?: number;             // XP cap (for XP-based system)
+  icon: string;               // lucide icon name
+  color: string;              // Primary tier color
+  bgColor: string;            // Background color for badges
+  podiumHeight?: number;      // Visual height in pixels for tier showcase
+}
+
+/**
+ * Badge Identifier - All available achievement badges
+ */
+export type BadgeId = 
+  // Session Milestones
+  | 'first-checkin' 
+  | 'frequent-flyer' 
+  | 'regular' 
+  | 'dedicated'
+  // Hour Milestones
+  | 'getting-started' 
+  | 'double-digits' 
+  | 'half-century' 
+  | 'century-club'
+  // Streak Milestones
+  | 'spark' 
+  | 'on-fire' 
+  | 'blazing' 
+  | 'unstoppable'
+  // Location-based
+  | 'explorer' 
+  | 'local-legend';
+
+/**
+ * Badge Category
+ */
+export type BadgeCategory = 'sessions' | 'hours' | 'streak' | 'location';
+
+/**
+ * Badge Definition - Achievement badge configuration
+ */
+export interface Badge {
+  id: BadgeId;
+  name: string;
+  description: string;
+  icon: string;               // lucide icon name
+  category: BadgeCategory;
+  threshold: number;          // Value required to earn badge
+  color: string;              // Badge accent color
+}
+
+/**
+ * User's earned badges - stored with timestamp
+ */
+export interface EarnedBadge {
+  badgeId: BadgeId;
+  earnedAt: Date;
+}
+
+// ============================================
+// XP & QUEST SYSTEM
+// ============================================
+
+/**
+ * Quest Definition - Daily or weekly challenge
+ */
+export interface Quest {
+  id: string;
+  type: 'daily' | 'weekly';
+  name: string;
+  description: string;
+  icon: string;               // lucide icon name
+  target: number;             // Goal value to complete
+  xpReward: number;          // XP awarded on completion
+}
+
+/**
+ * User Quest Progress - Tracks individual quest completion
+ */
+export interface UserQuestProgress {
+  questId: string;
+  progress: number;
+  completed: boolean;
+  completedAt?: Date;
+}

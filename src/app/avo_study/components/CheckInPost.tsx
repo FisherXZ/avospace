@@ -6,6 +6,7 @@ import { db, auth } from '@/lib/firebase';
 import { CheckInPost as CheckInPostType } from '@/types/study';
 import { useRouter } from 'next/navigation';
 import StudyRequestModal from './StudyRequestModal';
+import { MapPin, Users, Headphones, Coffee, MessageSquare, Send, Loader2, Check } from 'lucide-react';
 import './CheckInPost.css';
 
 interface CheckInPostProps {
@@ -14,12 +15,28 @@ interface CheckInPostProps {
 
 // Helper to get status display info
 function getStatusInfo(status: string) {
-  const statusMap: Record<string, { color: string; emoji: string; label: string }> = {
-    'open': { color: 'coral', emoji: '🤝', label: 'Open to study' },
-    'solo': { color: 'sky-blue', emoji: '🎧', label: 'Solo mode' },
-    'break': { color: 'yellow', emoji: '☕', label: 'On a break' },
+  const statusMap: Record<string, { variant: string; label: string; Icon: typeof Users }> = {
+    'open': { variant: 'open', label: 'Open to study', Icon: Users },
+    'solo': { variant: 'solo', label: 'Solo mode', Icon: Headphones },
+    'break': { variant: 'break', label: 'On a break', Icon: Coffee },
   };
   return statusMap[status] || statusMap['solo'];
+}
+
+// Helper to format date and time
+function formatDateTime(dateString: string, createdAt?: any): string {
+  // If we have a createdAt timestamp, use it to add time
+  if (createdAt && createdAt.toDate) {
+    const date = createdAt.toDate();
+    const timeString = date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    return `${dateString} • ${timeString}`;
+  }
+  // Fallback to just the date string
+  return dateString;
 }
 
 export default function CheckInPost({ post }: CheckInPostProps) {
@@ -79,7 +96,12 @@ export default function CheckInPost({ post }: CheckInPostProps) {
   }, [post.expiresAt]);
 
   if (loading) {
-    return <div className="checkin-post-loading">Loading post...</div>;
+    return (
+      <div className="checkin-post-loading">
+        <Loader2 size={20} className="loading-spinner" />
+        <span>Loading post...</span>
+      </div>
+    );
   }
 
   const handleUserClick = (e: React.MouseEvent) => {
@@ -92,6 +114,8 @@ export default function CheckInPost({ post }: CheckInPostProps) {
     setShowRequestModal(true);
   };
 
+  const StatusIcon = statusInfo.Icon;
+
   return (
     <>
       <div className="checkin-post-card">
@@ -100,7 +124,7 @@ export default function CheckInPost({ post }: CheckInPostProps) {
           <div className="checkin-post-kao">{kao}</div>
           <div className="checkin-post-user-info">
             <div className="checkin-post-username">@{username}</div>
-            <div className="checkin-post-date">{post.date}</div>
+            <div className="checkin-post-date">{formatDateTime(post.date, post.createdAt)}</div>
           </div>
           {isExpired && (
             <div className="checkin-expired-badge">Ended</div>
@@ -113,15 +137,14 @@ export default function CheckInPost({ post }: CheckInPostProps) {
           <div className="checkin-post-info-row">
             {/* Location */}
             <div className="checkin-post-location">
-              <span className="location-icon">📍</span>
+              <MapPin size={18} strokeWidth={2} className="location-icon" />
               <span className="location-name">{post.spotName}</span>
             </div>
 
             {/* Status */}
-            <div className="checkin-post-status-row">
-              <span className={`status-badge-post status-${statusInfo.color}`}>
-                {statusInfo.emoji} {statusInfo.label}
-              </span>
+            <div className={`status-badge-post status-${statusInfo.variant}`}>
+              <StatusIcon size={16} strokeWidth={2} className="status-icon" />
+              <span>{statusInfo.label}</span>
             </div>
 
             {/* Send Request Button - Inline */}
@@ -130,8 +153,8 @@ export default function CheckInPost({ post }: CheckInPostProps) {
                 className="send-request-button"
                 onClick={handleSendRequest}
               >
-                <span className="button-icon">📨</span>
-                Send Study Request
+                <Send size={16} strokeWidth={2} />
+                <span>Send Study Request</span>
               </button>
             )}
           </div>
@@ -139,7 +162,7 @@ export default function CheckInPost({ post }: CheckInPostProps) {
           {/* Status Note */}
           {post.statusNote && (
             <div className="checkin-post-note">
-              <span className="note-icon">💬</span>
+              <MessageSquare size={16} strokeWidth={2} className="note-icon" />
               <span className="note-text">"{post.statusNote}"</span>
             </div>
           )}
@@ -161,7 +184,7 @@ export default function CheckInPost({ post }: CheckInPostProps) {
           isOpen={showRequestModal}
           onClose={() => setShowRequestModal(false)}
           onSuccess={() => {
-            setToast(`📨 Request sent to @${username}`);
+            setToast(`Request sent to @${username}`);
           }}
         />
       )}
@@ -169,7 +192,8 @@ export default function CheckInPost({ post }: CheckInPostProps) {
       {/* Toast Notification */}
       {toast && (
         <div className="toast-notification toast-success">
-          {toast}
+          <Check size={18} strokeWidth={2.5} />
+          <span>{toast}</span>
         </div>
       )}
     </>

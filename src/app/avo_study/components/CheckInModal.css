@@ -1,5 +1,6 @@
 /* ============================================
-   CHECK-IN MODAL STYLES
+   CHECK-IN MODAL - PREMIUM MINIMALIST DESIGN
+   Swiss Spa Aesthetic
    ============================================ */
 
 /* Modal Backdrop */
@@ -9,8 +10,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
   z-index: 1050;
   animation: fadeIn 0.2s ease-out;
 }
@@ -31,25 +32,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 24px;
   animation: fadeIn 0.2s ease-out;
 }
 
 /* Modal Dialog */
 .modal-dialog-custom {
   width: 100%;
-  max-width: 540px;
+  max-width: 520px;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -57,54 +58,63 @@
 .modal-content-custom {
   background: white;
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  border: 1px solid #f0f0f0;
 }
 
-/* Modal Header */
+/* ============================================
+   MODAL HEADER
+   ============================================ */
+
 .modal-header-custom {
-  padding: 2rem 2rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid #f0f0f0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 16px;
+}
+
+.modal-header-content {
+  flex: 1;
 }
 
 .modal-title-custom {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--forest-green, #4A6B4A);
-  margin: 0 0 0.25rem 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  margin: 0 0 6px 0;
   line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .modal-subtitle-custom {
-  font-size: 0.9375rem;
-  color: var(--text-muted, #6c757d);
+  font-size: 14px;
+  color: var(--text-secondary, #737373);
   margin: 0;
+  font-weight: 400;
 }
 
 .btn-close-custom {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
-  background: #f3f4f6;
-  border: none;
-  border-radius: 8px;
-  font-size: 2rem;
-  line-height: 1;
-  color: #6b7280;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  color: var(--text-secondary, #737373);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .btn-close-custom:hover:not(:disabled) {
-  background: #e5e7eb;
-  color: #374151;
+  background: #f0f0f0;
+  border-color: #d4d4d4;
+  color: var(--text-primary, #171717);
 }
 
 .btn-close-custom:disabled {
@@ -112,16 +122,19 @@
   cursor: not-allowed;
 }
 
-/* Modal Body */
+/* ============================================
+   MODAL BODY
+   ============================================ */
+
 .modal-body-custom {
-  padding: 2rem;
+  padding: 28px 32px;
   max-height: 60vh;
   overflow-y: auto;
 }
 
 /* Form Sections */
 .form-section {
-  margin-bottom: 1.75rem;
+  margin-bottom: 28px;
 }
 
 .form-section:last-child {
@@ -131,46 +144,53 @@
 .form-label-custom {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
+  gap: 10px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--forest-green, #4A6B4A);
-  margin-bottom: 0.75rem;
+  color: var(--text-primary, #171717);
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
 }
 
 .label-icon {
-  font-size: 1.25rem;
+  color: var(--forest-green, #4A6B4A);
+  flex-shrink: 0;
 }
 
-/* Duration Picker */
+/* ============================================
+   DURATION PICKER
+   ============================================ */
+
 .duration-picker {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .duration-button {
-  padding: 0.875rem 1rem;
-  background: #f9fafb;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 0.9375rem;
+  padding: 14px 16px;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-secondary, #737373);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
 }
 
 .duration-button:hover:not(:disabled) {
-  background: #f3f4f6;
-  border-color: var(--primary-green, #5B9B7E);
+  background: white;
+  border-color: #d4d4d4;
+  color: var(--text-primary, #171717);
 }
 
 .duration-button.active {
-  background: var(--primary-green, #5B9B7E);
-  border-color: var(--primary-green, #5B9B7E);
+  background: var(--forest-green, #4A6B4A);
+  border-color: var(--forest-green, #4A6B4A);
   color: white;
-  box-shadow: 0 2px 8px rgba(91, 155, 126, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 107, 74, 0.25);
 }
 
 .duration-button:disabled {
@@ -178,42 +198,42 @@
   cursor: not-allowed;
 }
 
-/* Status Picker - 3 equal cards in a row */
+/* ============================================
+   STATUS PICKER
+   ============================================ */
+
 .status-picker {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 12px;
 }
 
-/* Status Button */
 .status-button {
-  padding: 1.5rem 1rem;
-  background: #f9fafb;
-  border: 2px solid #e5e7eb;
-  border-radius: 16px;
+  padding: 24px 16px;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.875rem;
-  min-height: 170px;
+  gap: 14px;
+  min-height: 160px;
 }
 
-/* Hover State */
 .status-button:hover:not(:disabled) {
-  background: #f3f4f6;
-  border-color: var(--primary-green, #5B9B7E);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-color: #d4d4d4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* Active State */
 .status-button.active {
-  background: var(--primary-green, #5B9B7E);
-  border-color: var(--primary-green, #5B9B7E);
-  box-shadow: 0 8px 20px rgba(91, 155, 126, 0.35);
+  background: var(--forest-green, #4A6B4A);
+  border-color: var(--forest-green, #4A6B4A);
+  box-shadow: 0 4px 16px rgba(74, 107, 74, 0.25);
   transform: translateY(-2px);
 }
 
@@ -222,71 +242,89 @@
 }
 
 .status-button.active .status-button-desc {
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.85);
 }
 
-/* Disabled State */
+.status-button.active .status-icon {
+  color: white;
+}
+
 .status-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
 
-/* Status Button - Icon */
-.status-button-icon {
-  font-size: 3rem;
-  filter: grayscale(0.3);
-  transition: filter 0.2s ease;
-  line-height: 1;
+/* Status Button Icon */
+.status-button-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e5e5e5;
+  transition: all 0.2s ease;
 }
 
-.status-button.active .status-button-icon {
-  filter: grayscale(0);
-  transform: scale(1.05);
+.status-button.active .status-button-icon-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: transparent;
 }
 
-/* Status Button - Content */
+.status-icon {
+  color: var(--forest-green, #4A6B4A);
+  transition: all 0.2s ease;
+}
+
+/* Status Button Content */
 .status-button-content {
   width: 100%;
 }
 
 .status-button-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--forest-green, #4A6B4A);
-  margin-bottom: 0.375rem;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  margin-bottom: 4px;
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .status-button-desc {
-  font-size: 0.875rem;
-  color: var(--text-muted, #6c757d);
+  font-size: 12px;
+  color: var(--text-secondary, #737373);
   line-height: 1.4;
 }
 
-/* Textarea */
+/* ============================================
+   TEXTAREA
+   ============================================ */
+
 .form-textarea-custom {
   width: 100%;
-  padding: 0.875rem 1rem;
-  font-size: 0.9375rem;
+  padding: 14px 16px;
+  font-size: 15px;
   font-family: inherit;
   line-height: 1.5;
-  background: #f9fafb;
-  border: 2px solid #e5e7eb;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
   border-radius: 12px;
   resize: vertical;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
 }
 
 .form-textarea-custom:focus {
   outline: none;
   background: white;
-  border-color: var(--primary-green, #5B9B7E);
-  box-shadow: 0 0 0 3px rgba(91, 155, 126, 0.1);
+  border-color: var(--forest-green, #4A6B4A);
+  box-shadow: 0 0 0 3px rgba(74, 107, 74, 0.1);
 }
 
 .form-textarea-custom::placeholder {
-  color: #9ca3af;
+  color: var(--text-muted, #a3a3a3);
 }
 
 .form-textarea-custom:disabled {
@@ -296,78 +334,106 @@
 
 /* Character Counter */
 .char-counter {
-  margin-top: 0.5rem;
+  margin-top: 8px;
   text-align: right;
-  font-size: 0.8125rem;
-  color: var(--text-muted, #6c757d);
+  font-size: 12px;
+  color: var(--text-muted, #a3a3a3);
+  font-weight: 500;
 }
 
-/* Alert */
+/* ============================================
+   ALERT
+   ============================================ */
+
 .alert-custom {
-  padding: 1rem 1.25rem;
+  padding: 14px 18px;
   border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
+  gap: 12px;
+  margin-top: 20px;
   animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .alert-danger {
   background: #fef2f2;
-  color: #991b1b;
+  color: #dc2626;
   border: 1px solid #fecaca;
 }
 
 .alert-icon {
-  font-size: 1.25rem;
   flex-shrink: 0;
 }
 
-/* Modal Footer */
+/* ============================================
+   MODAL FOOTER
+   ============================================ */
+
 .modal-footer-custom {
-  padding: 1.5rem 2rem;
-  border-top: 1px solid #e5e7eb;
+  padding: 20px 32px 28px;
+  border-top: 1px solid #f0f0f0;
   display: flex;
-  gap: 0.75rem;
+  gap: 12px;
   justify-content: flex-end;
 }
 
-/* Buttons */
+/* ============================================
+   BUTTONS
+   ============================================ */
+
 .btn-secondary-custom,
 .btn-primary-custom {
-  padding: 0.875rem 1.75rem;
-  font-size: 1rem;
+  padding: 12px 24px;
+  font-size: 15px;
   font-weight: 600;
   border: none;
-  border-radius: 50px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 8px;
+  letter-spacing: -0.01em;
 }
 
 .btn-secondary-custom {
-  background: #f3f4f6;
-  color: #4b5563;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  color: var(--text-secondary, #737373);
 }
 
 .btn-secondary-custom:hover:not(:disabled) {
-  background: #e5e7eb;
+  background: #f0f0f0;
+  border-color: #d4d4d4;
+  color: var(--text-primary, #171717);
 }
 
 .btn-primary-custom {
-  background: var(--primary-green, #5B9B7E);
+  background: var(--forest-green, #4A6B4A);
   color: white;
-  box-shadow: 0 2px 8px rgba(91, 155, 126, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 107, 74, 0.25);
 }
 
 .btn-primary-custom:hover:not(:disabled) {
-  background: var(--forest-green, #4A6B4A);
-  box-shadow: 0 4px 12px rgba(91, 155, 126, 0.4);
+  background: #3d5a3d;
+  box-shadow: 0 4px 12px rgba(74, 107, 74, 0.3);
   transform: translateY(-1px);
+}
+
+.btn-primary-custom:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .btn-primary-custom:disabled,
@@ -377,59 +443,124 @@
   transform: none;
 }
 
-.btn-primary-custom .button-icon {
-  font-size: 1.125rem;
+.button-spinner {
+  animation: spin 1s linear infinite;
 }
 
-/* Responsive */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 576px) {
   .modal-custom {
-    padding: 0.5rem;
+    padding: 16px;
+    align-items: flex-end;
   }
 
   .modal-dialog-custom {
     max-width: 100%;
   }
 
+  .modal-content-custom {
+    border-radius: 20px 20px 0 0;
+  }
+
   .modal-header-custom {
-    padding: 1.5rem 1.5rem 1rem;
+    padding: 24px 20px 16px;
   }
 
   .modal-title-custom {
-    font-size: 1.5rem;
+    font-size: 20px;
   }
 
   .modal-body-custom {
-    padding: 1.5rem;
+    padding: 20px;
+    max-height: 50vh;
   }
 
   .modal-footer-custom {
-    padding: 1rem 1.5rem;
+    padding: 16px 20px 24px;
     flex-direction: column-reverse;
+    gap: 10px;
   }
 
   .btn-secondary-custom,
   .btn-primary-custom {
     width: 100%;
+    padding: 14px 24px;
   }
 
   /* Mobile: Stack status buttons vertically */
   .status-picker {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
   
   .status-button {
-    min-height: 140px;
+    min-height: auto;
+    padding: 16px;
+    flex-direction: row;
+    gap: 14px;
+    text-align: left;
+  }
+
+  .status-button-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+
+  .status-icon {
+    width: 24px;
+    height: 24px;
   }
 
   .duration-picker {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  .form-section {
+    margin-bottom: 24px;
+  }
 }
 
 @media (max-height: 700px) {
   .modal-body-custom {
-    max-height: 50vh;
+    max-height: 45vh;
   }
 }
 
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop-custom,
+  .modal-dialog-custom,
+  .alert-custom {
+    animation: none;
+  }
+  
+  .duration-button,
+  .status-button,
+  .btn-secondary-custom,
+  .btn-primary-custom {
+    transition: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.btn-close-custom:focus-visible,
+.duration-button:focus-visible,
+.status-button:focus-visible,
+.btn-secondary-custom:focus-visible,
+.btn-primary-custom:focus-visible,
+.form-textarea-custom:focus-visible {
+  outline: 2px solid var(--forest-green, #4A6B4A);
+  outline-offset: 2px;
+}

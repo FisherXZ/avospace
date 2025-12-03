@@ -6,6 +6,7 @@ import { collection, addDoc, Timestamp, query, where, getDocs, getDoc, doc } fro
 import { db, auth } from '@/lib/firebase';
 import { StudySpot, CheckInStatus, DURATION_PRESETS, CHAR_LIMITS, STATUS_OPTIONS } from '@/types/study';
 import ErrorModal from './ErrorModal';
+import { X, Clock, MessageSquare, AlertCircle, Check, Loader2, Users, UserX, DoorOpen } from 'lucide-react';
 import './CheckInModal.css';
 
 interface CheckInModalProps {
@@ -109,6 +110,7 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
         type: 'checkin',
         text: `Checked in to ${spot.name}`, // Fallback text
         date: `${dateNow.getMonth() + 1}/${dateNow.getDate()}/${dateNow.getFullYear()}`,
+        createdAt: now, // Timestamp for proper sorting
         likes: 0,
         uid: auth.currentUser.uid,
         // Check-in specific fields
@@ -167,7 +169,7 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
           <div className="modal-content-custom">
             {/* Header */}
             <div className="modal-header-custom">
-              <div>
+              <div className="modal-header-content">
                 <h2 className="modal-title-custom">
                   Check in to {spot.name}
                 </h2>
@@ -182,7 +184,7 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
                 disabled={loading}
                 aria-label="Close"
               >
-                ×
+                <X size={20} strokeWidth={2} />
               </button>
             </div>
 
@@ -191,8 +193,8 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
               {/* Duration Picker */}
               <div className="form-section">
                 <label className="form-label-custom">
-                  <span className="label-icon">⏱️</span>
-                  How long will you study?
+                  <Clock size={18} strokeWidth={2} className="label-icon" />
+                  <span>How long will you study?</span>
                 </label>
                 <div className="duration-picker">
                   {DURATION_PRESETS.map(preset => (
@@ -212,36 +214,41 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
               {/* Status Picker */}
               <div className="form-section">
                 <label className="form-label-custom">
-                  <span className="label-icon">
-                    <img src="/avocado-icon.png" alt="Status" style={{ width: '20px', height: '20px', objectFit: 'contain', verticalAlign: 'middle' }} />
-                  </span>
-                  Study status
+                  <DoorOpen size={18} strokeWidth={2} className="label-icon" />
+                  <span>Study status</span>
                 </label>
                 
                 <div className="status-picker">
-                  {STATUS_OPTIONS.map(option => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      className={`status-button ${status === option.value ? 'active' : ''}`}
-                      onClick={() => setStatus(option.value)}
-                      disabled={loading}
-                    >
-                      <div className="status-button-icon">{option.emoji}</div>
-                      <div className="status-button-content">
-                        <div className="status-button-title">{option.label}</div>
-                        <div className="status-button-desc">{option.description}</div>
-                      </div>
-                    </button>
-                  ))}
+                  {STATUS_OPTIONS.map(option => {
+                    // Map status to icons
+                    const StatusIcon = option.value === 'open' ? Users : 
+                                       option.value === 'solo' ? UserX : DoorOpen;
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={`status-button ${status === option.value ? 'active' : ''}`}
+                        onClick={() => setStatus(option.value)}
+                        disabled={loading}
+                      >
+                        <div className="status-button-icon-wrapper">
+                          <StatusIcon size={32} strokeWidth={1.5} className="status-icon" />
+                        </div>
+                        <div className="status-button-content">
+                          <div className="status-button-title">{option.label}</div>
+                          <div className="status-button-desc">{option.description}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Status Note */}
               <div className="form-section">
                 <label htmlFor="statusNote" className="form-label-custom">
-                  <span className="label-icon">💬</span>
-                  Status note (optional)
+                  <MessageSquare size={18} strokeWidth={2} className="label-icon" />
+                  <span>Status note (optional)</span>
                 </label>
                 <textarea
                   id="statusNote"
@@ -261,8 +268,8 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
               {/* Error Message */}
               {error && (
                 <div className="alert-custom alert-danger">
-                  <span className="alert-icon">⚠️</span>
-                  {error}
+                  <AlertCircle size={20} strokeWidth={2} className="alert-icon" />
+                  <span>{error}</span>
                 </div>
               )}
             </div>
@@ -285,13 +292,13 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
               >
                 {loading ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" />
-                    Checking in...
+                    <Loader2 size={18} className="button-spinner" />
+                    <span>Checking in...</span>
                   </>
                 ) : (
                   <>
-                    <span className="button-icon">✓</span>
-                    Check In
+                    <Check size={18} strokeWidth={2.5} />
+                    <span>Check In</span>
                   </>
                 )}
               </button>

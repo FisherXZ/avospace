@@ -16,6 +16,18 @@ import {
 import { db, auth } from '@/lib/firebase';
 import { StudyRequest } from '@/types/study';
 import { getUserData } from '../utils/userCache';
+import { 
+  ArrowLeft, 
+  Inbox, 
+  Send, 
+  Mail, 
+  MapPin, 
+  Clock, 
+  Check, 
+  X, 
+  Loader2,
+  MessageSquare
+} from 'lucide-react';
 import './inbox.css';
 
 interface PopulatedStudyRequest extends StudyRequest {
@@ -168,7 +180,7 @@ export default function StudyRequestInbox() {
       // Show success toast
       if (request?.fromUser) {
         setToast({
-          message: `✓ Accepted! Studying with @${request.fromUser.username}`,
+          message: `Accepted! Studying with @${request.fromUser.username}`,
           type: 'success'
         });
       }
@@ -213,9 +225,7 @@ export default function StudyRequestInbox() {
   if (loading) {
     return (
       <div className="inbox-loading">
-        <div className="spinner-border text-success" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+        <Loader2 className="loading-spinner" size={40} />
         <p className="loading-text">Loading requests...</p>
       </div>
     );
@@ -223,19 +233,27 @@ export default function StudyRequestInbox() {
 
   return (
     <main className="inbox-page">
-      <div className="container inbox-container">
+      <div className="inbox-container">
         {/* Header */}
         <div className="inbox-header">
-          <button 
-            className="back-button"
-            onClick={() => router.push('/avo_study')}
-          >
-            ← Back to Avo Study
-          </button>
-          <h2 className="inbox-title">AvoMail</h2>
-          {pendingCount > 0 && (
-            <span className="pending-badge">{pendingCount} pending</span>
-          )}
+          <div className="inbox-header-top">
+            <button 
+              className="back-button"
+              onClick={() => router.push('/avo_study')}
+            >
+              <ArrowLeft size={20} strokeWidth={2} />
+              <span>Back</span>
+            </button>
+            <div className="inbox-header-right">
+              {pendingCount > 0 && (
+                <span className="pending-badge">{pendingCount} pending</span>
+              )}
+            </div>
+          </div>
+          <div className="inbox-title-row">
+            <Mail size={28} strokeWidth={2} className="title-icon" />
+            <h1 className="inbox-title">AvoMail</h1>
+          </div>
         </div>
 
         {/* Main Tabs: Received / Sent */}
@@ -247,7 +265,8 @@ export default function StudyRequestInbox() {
               setFilter('all');
             }}
           >
-            📬 Received ({requests.length})
+            <Inbox size={18} strokeWidth={2} />
+            <span>Received ({requests.length})</span>
           </button>
           <button 
             className={`main-tab ${tab === 'sent' ? 'active' : ''}`}
@@ -256,7 +275,8 @@ export default function StudyRequestInbox() {
               setFilter('all');
             }}
           >
-            📤 Sent ({sentRequests.length})
+            <Send size={18} strokeWidth={2} />
+            <span>Sent ({sentRequests.length})</span>
           </button>
         </div>
 
@@ -292,7 +312,7 @@ export default function StudyRequestInbox() {
         <div className="requests-list">
           {filteredRequests.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">📭</div>
+              <Inbox className="empty-icon" size={64} strokeWidth={1.5} />
               <h3>No {filter !== 'all' ? filter : ''} requests</h3>
               <p>
                 {tab === 'received' 
@@ -325,7 +345,10 @@ export default function StudyRequestInbox() {
                           {userLabel}: @{displayUser?.username}
                         </div>
                         <div className="request-meta">
-                          📍 {request.spotName} · {new Date(request.sentAt.toMillis()).toLocaleDateString()}
+                          <MapPin size={14} strokeWidth={2} />
+                          <span>{request.spotName}</span>
+                          <span className="meta-separator">·</span>
+                          <span>{new Date(request.sentAt.toMillis()).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
@@ -336,7 +359,8 @@ export default function StudyRequestInbox() {
 
                   {/* Message */}
                   <div className="request-message">
-                    "{request.message}"
+                    <MessageSquare size={14} strokeWidth={2} className="message-icon" />
+                    <span>"{request.message}"</span>
                   </div>
 
                   {/* Actions - Only show for received requests */}
@@ -346,13 +370,15 @@ export default function StudyRequestInbox() {
                         className="btn-decline"
                         onClick={() => handleDecline(request.id)}
                       >
-                        Decline
+                        <X size={16} strokeWidth={2} />
+                        <span>Decline</span>
                       </button>
                       <button 
                         className="btn-accept"
                         onClick={() => handleAccept(request.id)}
                       >
-                        Accept
+                        <Check size={16} strokeWidth={2.5} />
+                        <span>Accept</span>
                       </button>
                     </div>
                   )}
@@ -360,19 +386,22 @@ export default function StudyRequestInbox() {
                   {/* Status Messages */}
                   {request.status === 'accepted' && (
                     <div className="request-accepted-message">
-                      ✓ {isReceivedTab ? 'You accepted this request' : 'Request accepted'}
+                      <Check size={16} strokeWidth={2.5} />
+                      <span>{isReceivedTab ? 'You accepted this request' : 'Request accepted'}</span>
                     </div>
                   )}
 
                   {request.status === 'declined' && (
                     <div className="request-declined-message">
-                      ✗ {isReceivedTab ? 'You declined this request' : 'Request declined'}
+                      <X size={16} strokeWidth={2} />
+                      <span>{isReceivedTab ? 'You declined this request' : 'Request declined'}</span>
                     </div>
                   )}
 
                   {request.status === 'pending' && !isReceivedTab && (
                     <div className="request-pending-message">
-                      ⏳ Waiting for response...
+                      <Clock size={16} strokeWidth={2} />
+                      <span>Waiting for response...</span>
                     </div>
                   )}
                 </div>
@@ -385,7 +414,12 @@ export default function StudyRequestInbox() {
       {/* Toast Notification */}
       {toast && (
         <div className={`toast-notification toast-${toast.type}`}>
-          {toast.message}
+          {toast.type === 'success' ? (
+            <Check size={18} strokeWidth={2.5} />
+          ) : (
+            <X size={18} strokeWidth={2} />
+          )}
+          <span>{toast.message}</span>
         </div>
       )}
     </main>
