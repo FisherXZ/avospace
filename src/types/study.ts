@@ -314,16 +314,19 @@ export type TierLevel = 'seedling' | 'studier' | 'scholar' | 'grinder' | 'master
 
 /**
  * Tier Definition - Rank tier configuration
+ * Supports both hours-based and XP-based tier systems
  */
 export interface Tier {
   level: TierLevel;
   name: string;
-  minXP: number;              // XP required to reach this tier
-  maxXP: number;              // XP cap for this tier (Infinity for legend)
+  minHours?: number;          // Hours required (for hours-based system)
+  maxHours?: number;          // Hours cap (for hours-based system)
+  minXP?: number;             // XP required (for XP-based system)
+  maxXP?: number;             // XP cap (for XP-based system)
   icon: string;               // lucide icon name
   color: string;              // Primary tier color
   bgColor: string;            // Background color for badges
-  podiumHeight: number;       // Visual height in pixels for tier showcase
+  podiumHeight?: number;      // Visual height in pixels for tier showcase
 }
 
 /**

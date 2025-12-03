@@ -216,7 +216,7 @@ export default function StatsPage() {
           return entry.spotStats && entry.spotStats[selectedSpot];
         }).map(entry => {
           // Replace total hours with hours at selected spot
-          const spotData = entry.spotStats[selectedSpot];
+          const spotData = entry.spotStats?.[selectedSpot];
           return {
             ...entry,
             totalHours: spotData ? spotData.totalMinutes / 60 : 0,

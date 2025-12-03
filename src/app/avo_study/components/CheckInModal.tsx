@@ -222,7 +222,7 @@ export default function CheckInModal({ spot, isOpen, onClose }: CheckInModalProp
                   {STATUS_OPTIONS.map(option => {
                     // Map status to icons
                     const StatusIcon = option.value === 'open' ? Users : 
-                                       option.value === 'focus' ? UserX : DoorOpen;
+                                       option.value === 'solo' ? UserX : DoorOpen;
                     return (
                       <button
                         key={option.value}

@@ -147,7 +147,7 @@ export function calculateSessionXP(params: {
  */
 export function getTierByXP(xp: number): Tier {
   for (let i = XP_TIERS.length - 1; i >= 0; i--) {
-    if (xp >= XP_TIERS[i].minXP) {
+    if (xp >= (XP_TIERS[i].minXP ?? 0)) {
       return XP_TIERS[i];
     }
   }
@@ -183,8 +183,8 @@ export function getTierProgress(xp: number): number {
     return 100; // Already at Legend
   }
   
-  const tierRange = nextTier.minXP - currentTier.minXP;
-  const userProgress = xp - currentTier.minXP;
+  const tierRange = (nextTier.minXP ?? 0) - (currentTier.minXP ?? 0);
+  const userProgress = xp - (currentTier.minXP ?? 0);
   
   return Math.min(100, Math.max(0, (userProgress / tierRange) * 100));
 }
@@ -200,7 +200,7 @@ export function getXPToNextTier(xp: number): number {
     return 0;
   }
   
-  return Math.max(0, nextTier.minXP - xp);
+  return Math.max(0, (nextTier.minXP ?? 0) - xp);
 }
 
 /**

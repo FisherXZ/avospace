@@ -71,7 +71,7 @@ export const TIERS: Tier[] = [
 export function getTier(hours: number): Tier {
   // Find the highest tier the user qualifies for
   for (let i = TIERS.length - 1; i >= 0; i--) {
-    if (hours >= TIERS[i].minHours) {
+    if (hours >= (TIERS[i].minHours ?? 0)) {
       return TIERS[i];
     }
   }
@@ -108,8 +108,8 @@ export function getTierProgress(hours: number): number {
     return 100; // Already at legend
   }
   
-  const tierRange = nextTier.minHours - currentTier.minHours;
-  const userProgress = hours - currentTier.minHours;
+  const tierRange = (nextTier.minHours ?? 0) - (currentTier.minHours ?? 0);
+  const userProgress = hours - (currentTier.minHours ?? 0);
   
   return Math.min(100, Math.max(0, (userProgress / tierRange) * 100));
 }
@@ -126,7 +126,7 @@ export function getHoursToNextTier(hours: number): number {
     return 0;
   }
   
-  return Math.max(0, nextTier.minHours - hours);
+  return Math.max(0, (nextTier.minHours ?? 0) - hours);
 }
 
 /**

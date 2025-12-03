@@ -255,7 +255,7 @@ export default function TiersPage() {
           <div className="tiers-showcase">
             {XP_TIERS.map((tier, index) => {
               const isCurrentTier = myStats && getTierByXP(myStats.totalXP).level === tier.level;
-              const isUnlocked = myStats && myStats.totalXP >= tier.minXP;
+              const isUnlocked = myStats && myStats.totalXP >= (tier.minXP ?? 0);
               
               return (
                 <div 
@@ -290,8 +290,8 @@ export default function TiersPage() {
                       {tier.name}
                     </h3>
                     <p className="tier-requirement">
-                      {tier.minXP.toLocaleString()} XP
-                      {tier.maxXP !== Infinity && ` - ${tier.maxXP.toLocaleString()} XP`}
+                      {(tier.minXP ?? 0).toLocaleString()} XP
+                      {tier.maxXP !== Infinity && tier.maxXP && ` - ${tier.maxXP.toLocaleString()} XP`}
                     </p>
                     {isCurrentTier && (
                       <div className="you-badge">You are here</div>

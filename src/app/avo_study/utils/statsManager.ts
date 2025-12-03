@@ -66,11 +66,14 @@ export async function updateUserStats(
 
   if (!statsDoc.exists()) {
     // Create initial stats document
+    const initialXP = Math.floor(duration / 60) * 60; // Simple: 60 XP per hour
     const initialStats: UserStats = {
       userId,
       totalSessions: 1,
       totalMinutes: duration,
       totalHours: parseFloat((duration / 60).toFixed(2)),
+      totalXP: initialXP,
+      coins: Math.floor(initialXP / 5), // 5 XP = 1 coin
       currentStreak: 1,
       longestStreak: 1,
       lastStudyDate: today,
@@ -140,11 +143,18 @@ export async function updateUserStats(
 
     const favorite = spotCountsUnique.sort((a, b) => b.count - a.count)[0];
 
+    // Calculate XP for this session
+    const sessionXP = Math.floor(duration / 60) * 60; // 60 XP per hour
+    const newTotalXP = (data.totalXP || 0) + sessionXP;
+    const newCoins = Math.floor(newTotalXP / 5); // 5 XP = 1 coin
+    
     // Update document
     await updateDoc(statsRef, {
       totalSessions: data.totalSessions + 1,
       totalMinutes: newTotalMinutes,
       totalHours: newTotalHours,
+      totalXP: newTotalXP,
+      coins: newCoins,
       currentStreak: newStreak,
       longestStreak: Math.max(data.longestStreak, newStreak),
       lastStudyDate: today,
