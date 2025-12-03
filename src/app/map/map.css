@@ -6,21 +6,36 @@
 /* Import Leaflet CSS */
 @import 'leaflet/dist/leaflet.css';
 
-/* Map Page - Full Screen Container */
+/* Map Shell - App Shell with sidebar support */
+.map-shell {
+  min-height: 100vh;
+  background-color: var(--background-page);
+}
+
+/* Map Page - Full Screen Container (adjusted for sidebar) */
 .map-page {
-  height: 100vh;
-  width: 100vw;
+  height: calc(100vh - 64px);
+  width: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
   position: fixed;
-  inset: 0;
+  top: 64px;
+  left: 80px;
+  right: 0;
+  bottom: 0;
   background-color: var(--background-page);
+  transition: left var(--transition-normal);
+}
+
+/* Adjust map when sidebar is hovered */
+.map-shell .app-sidebar:hover ~ .map-page {
+  left: 240px;
 }
 
 /* Map Container - Background Layer */
 .map-container {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   height: 100%;
@@ -196,6 +211,15 @@
 @media (max-width: 768px) {
   .map-sidebar {
     display: none;
+  }
+
+  .map-page {
+    left: 0;
+    height: calc(100vh - 64px);
+  }
+
+  .map-shell .app-sidebar:hover ~ .map-page {
+    left: 0;
   }
 
   .map-info-card {

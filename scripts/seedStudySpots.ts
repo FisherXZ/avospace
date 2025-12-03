@@ -73,6 +73,27 @@ export const studySpots: StudySpot[] = [
     hours: '8:00 AM - 11:00 PM',
     latitude: 37.8745,
     longitude: -122.2570
+  },
+  {
+    id: 'east-asian-library',
+    name: 'East Asian Library',
+    hours: '9:00 AM - 10:00 PM',
+    latitude: 37.8733,
+    longitude: -122.2595
+  },
+  {
+    id: 'kresge',
+    name: 'Kresge',
+    hours: '9:00 AM - 11:00 PM',
+    latitude: 37.8742,
+    longitude: -122.2573
+  },
+  {
+    id: 'way-west',
+    name: 'Way West (Berkeley Way West)',
+    hours: '8:00 AM - 5:00 PM',
+    latitude: 37.8680,
+    longitude: -122.2598
   }
 ];
 

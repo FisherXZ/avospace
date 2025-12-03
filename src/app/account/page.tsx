@@ -7,6 +7,8 @@ import { doc, getDoc, DocumentData, query, collection, getDocs, where } from "fi
 import EditComposer, { EditComposerRef } from '../../../components/EditComposer';
 import Post from '../../../components/Post';
 import { formatPhoneForDisplay } from '@/lib/validation';
+import { Mail, Phone, Pencil, FileText } from 'lucide-react';
+import './account.css';
 
 function SidebarHomeIcon() {
     return (
@@ -23,29 +25,52 @@ function SidebarHomeIcon() {
     );
 }
 
-function SidebarEditIcon() {
+
+function SidebarStudyIcon() {
     return (
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
             <path
-                d="M16.5 4.5L19.5 7.5L10 17H7V14L16.5 4.5Z"
+                d="M4 6.5C4 5.67 4.67 5 5.5 5h8.5a3 3 0 0 1 3 3v10.5l-4.25-2.25L8.5 18.5 4 16.25V6.5z"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.7"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
-            <rect
-                x="4"
-                y="4"
-                width="16"
-                height="16"
-                rx="3"
+            <path
+                d="M9 9h4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
+
+function SidebarMapIcon() {
+    return (
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <polygon 
+                points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.7"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
+            <line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" strokeWidth="1.7" />
+            <line x1="16" y1="6" x2="16" y2="22" stroke="currentColor" strokeWidth="1.7" />
+        </svg>
+    );
+}
+
+function SidebarStatsIcon() {
+    return (
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+            <line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+            <line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
         </svg>
     );
 }
@@ -187,79 +212,94 @@ export default function Account() {
                     </li>
                     <li
                         className="app-sidebar-item"
-                        onClick={() => editComposerRef.current?.open()}
+                        onClick={() => router.push('/avo_study')}
                     >
                         <span className="app-sidebar-icon">
-                            <SidebarEditIcon />
+                            <SidebarStudyIcon />
                         </span>
-                        <span className="app-sidebar-label">Edit profile</span>
+                        <span className="app-sidebar-label">Avo Study</span>
+                    </li>
+                    <li
+                        className="app-sidebar-item"
+                        onClick={() => router.push('/map')}
+                    >
+                        <span className="app-sidebar-icon">
+                            <SidebarMapIcon />
+                        </span>
+                        <span className="app-sidebar-label">Map</span>
+                    </li>
+                    <li
+                        className="app-sidebar-item"
+                        onClick={() => router.push('/avo_study/stats')}
+                    >
+                        <span className="app-sidebar-icon">
+                            <SidebarStatsIcon />
+                        </span>
+                        <span className="app-sidebar-label">Statistics</span>
                     </li>
                 </ul>
             </aside>
 
             {/* Main content */}
-            <div className="page-container-wide">
-                <div className="d-flex justify-content-center">
-                    <section style={{ width: '100%', maxWidth: 900 }}>
-                        {/* Hero Card */}
-                        <div className="card-elevated mb-5 overflow-hidden">
+            <div className="account-page-container">
+                <div className="account-content-wrapper">
+                    <section className="account-section">
+                        {/* Profile Hero Card */}
+                        <div className="profile-hero-card">
                             <div 
-                                className="p-5 d-flex flex-column align-items-center justify-content-center text-center position-relative"
-                                style={{ 
-                                    background: bgColor, 
-                                    minHeight: '300px',
-                                    transition: 'background 0.5s ease'
-                                }}
+                                className="profile-hero-content"
+                                style={{ background: bgColor }}
                             >
-                                <div className="position-relative z-1">
-                                    <div 
-                                        className="mb-3"
-                                        style={{ 
-                                            fontSize: '6rem', 
-                                            lineHeight: 1,
-                                            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))'
-                                        }}
-                                    >
+                                <div className="profile-info">
+                                    <div className="profile-avatar">
                                         {kao}
                                     </div>
-                                    <h1 className="display-6 fw-bold mb-2" style={{ textShadow: '0 2px 10px rgba(255,255,255,0.5)' }}>
-                                        {username}
-                                    </h1>
-                                    <div className="d-flex justify-content-center gap-3 text-muted-soft" style={{ background: 'rgba(255,255,255,0.5)', padding: '4px 12px', borderRadius: '20px', backdropFilter: 'blur(4px)' }}>
-                                        {email && <span>📧 {email}</span>}
-                                        {phoneNumber && <span>📱 {formatPhoneForDisplay(phoneNumber)}</span>}
+                                    <h1 className="profile-username">{username}</h1>
+                                    <div className="profile-contact">
+                                        {email && (
+                                            <span className="contact-item">
+                                                <Mail size={16} strokeWidth={2} />
+                                                {email}
+                                            </span>
+                                        )}
+                                        {phoneNumber && (
+                                            <span className="contact-item">
+                                                <Phone size={16} strokeWidth={2} />
+                                                {formatPhoneForDisplay(phoneNumber)}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                                 
-                                {/* Actions */}
-                                <div className="position-absolute top-0 end-0 m-4">
-                                    <button
-                                        className="btn btn-light shadow-sm rounded-pill px-4"
-                                        onClick={() => editComposerRef.current?.open()}
-                                    >
-                                        ✏️ Edit Profile
-                                    </button>
-                                </div>
+                                {/* Edit Button */}
+                                <button
+                                    className="edit-profile-button"
+                                    onClick={() => editComposerRef.current?.open()}
+                                >
+                                    <Pencil size={18} strokeWidth={2} />
+                                    <span>Edit Profile</span>
+                                </button>
                             </div>
                         </div>
 
-                        <div className="px-1">
-                            <h4 className="mb-4 fw-bold">Your Posts</h4>
+                        {/* Posts Section */}
+                        <div className="posts-section">
+                            <h2 className="posts-section-title">Your Posts</h2>
                             {userPosts.length === 0 ? (
-                                <div className="text-center py-5 bg-light rounded-4">
-                                    <p className="fs-1 mb-3">📝</p>
-                                    <p className="text-muted mb-0">
-                                        No posts yet. Check in at study spots to share your activity!
-                                    </p>
+                                <div className="empty-posts-state">
+                                    <FileText className="empty-icon" size={64} strokeWidth={1.5} />
+                                    <h3>No Posts Yet</h3>
+                                    <p>Check in at study spots to share your activity</p>
                                 </div>
                             ) : (
-                                <div>
+                                <div className="posts-list">
                                     {userPosts.map((post, idx) => (
-                                        <Post
-                                            key={idx}
-                                            clickable={false}
-                                            {...post}
-                                        />
+                                        <div key={idx} className="post-wrapper">
+                                            <Post
+                                                clickable={false}
+                                                {...post}
+                                            />
+                                        </div>
                                     ))}
                                 </div>
                             )}

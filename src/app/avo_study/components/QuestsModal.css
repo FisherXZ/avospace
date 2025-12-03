@@ -1,0 +1,385 @@
+/* ============================================
+   QUESTS MODAL
+   ============================================ */
+
+.quests-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.quests-modal-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 1100px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   MODAL HEADER
+   ============================================ */
+
+.quests-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-title-row svg {
+  color: var(--forest-green, #4A6B4A);
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary, #171717);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.modal-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-secondary, #737373);
+}
+
+.modal-close-btn:hover {
+  background: #e5e5e5;
+  color: var(--text-primary, #171717);
+}
+
+/* ============================================
+   MODAL BODY
+   ============================================ */
+
+.quests-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+.quests-panels-modal {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* Quest panels inherit styles from quests.css */
+.quests-modal-body .quest-panel {
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.quests-modal-body .panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.quests-modal-body .panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary, #171717);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.quests-modal-body .daily-panel .panel-title {
+  color: #5B9B7E;
+}
+
+.quests-modal-body .weekly-panel .panel-title {
+  color: var(--forest-green, #4A6B4A);
+}
+
+.quests-modal-body .reset-timer {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #737373);
+  padding: 4px 10px;
+  background: white;
+  border-radius: 12px;
+}
+
+.quests-modal-body .quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quests-modal-body .quest-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.quests-modal-body .quest-card:hover {
+  border-color: #e5e5e5;
+  transform: translateX(2px);
+}
+
+.quests-modal-body .quest-card.completed {
+  background: linear-gradient(135deg, rgba(74, 107, 74, 0.08) 0%, rgba(74, 107, 74, 0.04) 100%);
+  border-color: var(--forest-green, #4A6B4A);
+}
+
+.quests-modal-body .quest-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: 2px solid #e5e5e5;
+  border-radius: 10px;
+  color: var(--forest-green, #4A6B4A);
+  transition: all 0.2s ease;
+}
+
+.quests-modal-body .quest-card:hover .quest-icon {
+  border-color: var(--forest-green, #4A6B4A);
+}
+
+.quests-modal-body .quest-card.completed .quest-icon {
+  background: var(--forest-green, #4A6B4A);
+  border-color: var(--forest-green, #4A6B4A);
+  color: white;
+}
+
+.quests-modal-body .quest-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.quests-modal-body .quest-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
+}
+
+.quests-modal-body .quest-description {
+  font-size: 12px;
+  color: var(--text-secondary, #737373);
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.quests-modal-body .quest-progress-bar {
+  height: 6px;
+  background: #e5e5e5;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.quests-modal-body .progress-fill {
+  height: 100%;
+  background: var(--forest-green, #4A6B4A);
+  border-radius: 3px;
+  transition: width 0.5s ease-out;
+}
+
+.quests-modal-body .quest-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quests-modal-body .progress-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+}
+
+.quests-modal-body .check-icon {
+  color: var(--forest-green, #4A6B4A);
+  animation: checkBounce 0.4s ease-out;
+}
+
+@keyframes checkBounce {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.quests-modal-body .quest-reward {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #737373);
+  padding: 4px 10px;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+.quests-modal-body .quest-card.completed .quest-reward {
+  background: var(--light-green, #E8F3E8);
+  border-color: var(--forest-green, #4A6B4A);
+  color: var(--forest-green, #4A6B4A);
+}
+
+.quests-modal-body .coin-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .quests-panels-modal {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .quests-modal-header {
+    padding: 20px 24px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .quests-modal-body {
+    padding: 24px 20px;
+  }
+
+  .quests-panels-modal {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .quests-modal-body .quest-panel {
+    padding: 20px;
+  }
+
+  .quests-modal-body .quest-card {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quests-modal-overlay {
+    padding: 10px;
+  }
+
+  .quests-modal-content {
+    border-radius: 16px;
+    max-height: 95vh;
+  }
+
+  .quests-modal-header {
+    padding: 16px 20px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  .quests-modal-body {
+    padding: 20px 16px;
+  }
+
+  .quests-modal-body .quest-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .quests-modal-body .quest-icon {
+    margin: 0 auto;
+  }
+
+  .quests-modal-body .quest-info {
+    text-align: center;
+  }
+
+  .quests-modal-body .quest-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .quests-modal-body .quest-reward {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

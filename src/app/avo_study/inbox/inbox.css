@@ -1,255 +1,432 @@
-/* Study Request Inbox CSS */
+/* ============================================
+   AVOMAIL INBOX - PREMIUM MINIMALIST DESIGN
+   Swiss Spa Aesthetic
+   ============================================ */
 
 .inbox-page {
   min-height: 100vh;
-  background: var(--background-page);
-  padding-bottom: 40px;
+  background: #fafafa;
+  padding-bottom: 60px;
 }
 
 .inbox-container {
-  max-width: 800px;
+  max-width: 680px;
   margin: 0 auto;
-  padding-top: 100px; /* Space for navbar */
+  padding: 100px 24px 0;
 }
+
+/* ============================================
+   HEADER
+   ============================================ */
 
 .inbox-header {
   margin-bottom: 32px;
 }
 
+.inbox-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
 .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--text-secondary, #737373);
   font-weight: 500;
-  padding: 0;
-  margin-bottom: 16px;
+  padding: 8px 0;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: color var(--transition-fast);
+  font-size: 14px;
+  transition: color 0.2s ease;
+  letter-spacing: -0.01em;
 }
 
 .back-button:hover {
-  color: var(--primary-green);
+  color: var(--forest-green, #4A6B4A);
 }
 
-.inbox-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin: 0;
+.inbox-header-right {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
 .pending-badge {
-  background: var(--coral);
-  color: white;
-  font-size: 0.8rem;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
+  background: rgba(232, 121, 121, 0.15);
+  color: #c0392b;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 20px;
   font-weight: 600;
-  vertical-align: middle;
+  letter-spacing: -0.01em;
 }
 
-/* Main Tabs (Received / Sent) */
+.inbox-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.title-icon {
+  color: var(--forest-green, #4A6B4A);
+}
+
+.inbox-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary, #171717);
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+/* ============================================
+   MAIN TABS (RECEIVED / SENT)
+   ============================================ */
+
 .inbox-main-tabs {
   display: flex;
-  background: var(--background-surface);
-  padding: 4px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 24px;
-  box-shadow: var(--shadow-sm);
+  background: white;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .main-tab {
   flex: 1;
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 20px;
   border: none;
   background: transparent;
-  border-radius: var(--radius-pill);
+  border-radius: 10px;
   font-weight: 600;
-  color: var(--text-muted);
+  font-size: 14px;
+  color: var(--text-secondary, #737373);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.main-tab:hover {
+  color: var(--text-primary, #171717);
+  background: #f5f5f5;
 }
 
 .main-tab.active {
-  background: var(--primary-green);
+  background: var(--forest-green, #4A6B4A);
   color: white;
-  box-shadow: 0 2px 8px rgba(91, 155, 126, 0.2);
+  box-shadow: 0 2px 8px rgba(74, 107, 74, 0.25);
 }
 
-/* Filter Tabs */
+/* ============================================
+   FILTER TABS
+   ============================================ */
+
 .inbox-filters {
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
   overflow-x: auto;
   padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filter-tab {
-  padding: 6px 16px;
+  padding: 8px 18px;
   background: transparent;
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-pill);
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 500;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  color: var(--text-secondary, #737373);
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
 }
 
 .filter-tab:hover {
-  background: var(--background-subtle);
+  background: #f5f5f5;
+  border-color: #d5d5d5;
 }
 
 .filter-tab.active {
-  background: var(--text-primary);
+  background: var(--text-primary, #171717);
   color: white;
-  border-color: var(--text-primary);
+  border-color: var(--text-primary, #171717);
 }
 
-/* Request Card */
+/* ============================================
+   REQUESTS LIST
+   ============================================ */
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ============================================
+   REQUEST CARD
+   ============================================ */
+
 .request-card {
-  background: var(--background-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-bottom: 16px;
-  transition: all var(--transition-normal);
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden;
 }
 
 .request-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
-.request-pending { border-left: 4px solid var(--yellow-highlight); }
-.request-accepted { border-left: 4px solid var(--primary-green); opacity: 0.8; }
-.request-declined { border-left: 4px solid var(--text-muted); opacity: 0.6; }
+/* Status border accents - subtle left border */
+.request-pending {
+  border-left: 3px solid #f59e0b;
+}
 
-/* Card Header */
+.request-accepted {
+  border-left: 3px solid var(--forest-green, #4A6B4A);
+}
+
+.request-declined {
+  border-left: 3px solid #d1d5db;
+  opacity: 0.75;
+}
+
+/* ============================================
+   CARD HEADER
+   ============================================ */
+
 .request-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .request-user {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.request-user:hover {
+  opacity: 0.8;
 }
 
 .request-kao {
-  font-size: 2rem;
+  font-size: 40px;
   line-height: 1;
 }
 
+.request-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .request-username {
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary, #171717);
+  letter-spacing: -0.01em;
 }
 
 .request-meta {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.request-status-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  text-transform: uppercase;
-}
-
-.status-pending { background: var(--yellow-highlight); color: var(--text-secondary); }
-.status-accepted { background: var(--light-green); color: var(--forest-green); }
-.status-declined { background: var(--background-subtle); color: var(--text-muted); }
-
-/* Message */
-.request-message {
-  background: var(--background-subtle);
-  padding: 12px;
-  border-radius: var(--radius-md);
-  font-style: italic;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
-  position: relative;
-}
-
-.request-message::before {
-  content: '💬';
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  font-size: 12px;
-  background: var(--background-surface);
-  padding: 2px 6px;
-  border-radius: 10px;
-  border: 1px solid var(--border-subtle);
-}
-
-/* Actions */
-.request-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary, #737373);
 }
 
-.btn-accept, .btn-decline {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.btn-accept {
-  background: var(--primary-green);
-  color: white;
-}
-
-.btn-accept:hover {
-  background: var(--forest-green);
-  box-shadow: 0 4px 12px rgba(91, 155, 126, 0.2);
-}
-
-.btn-decline {
-  background: var(--background-subtle);
-  color: var(--text-secondary);
-}
-
-.btn-decline:hover {
-  background: #e9ecef;
-}
-
-/* Empty State */
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
-}
-
-.empty-icon {
-  font-size: 4rem;
-  margin-bottom: 16px;
+.meta-separator {
   opacity: 0.5;
 }
 
-/* Loading */
+/* ============================================
+   STATUS BADGE
+   ============================================ */
+
+.request-status-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+.status-accepted {
+  background: rgba(74, 107, 74, 0.12);
+  color: var(--forest-green, #4A6B4A);
+}
+
+.status-declined {
+  background: #f5f5f5;
+  color: var(--text-secondary, #737373);
+}
+
+/* ============================================
+   MESSAGE
+   ============================================ */
+
+.request-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-secondary, #737373);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.message-icon {
+  color: var(--forest-green, #4A6B4A);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+
+.request-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-accept,
+.btn-decline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.btn-accept {
+  background: var(--forest-green, #4A6B4A);
+  color: white;
+  box-shadow: 0 2px 4px rgba(74, 107, 74, 0.2);
+}
+
+.btn-accept:hover {
+  background: #3d5a3d;
+  box-shadow: 0 4px 8px rgba(74, 107, 74, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-decline {
+  background: #f5f5f5;
+  color: var(--text-secondary, #737373);
+}
+
+.btn-decline:hover {
+  background: #e5e5e5;
+  color: var(--text-primary, #171717);
+}
+
+/* ============================================
+   STATUS MESSAGES
+   ============================================ */
+
+.request-accepted-message,
+.request-declined-message,
+.request-pending-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #fafafa;
+  letter-spacing: -0.01em;
+}
+
+.request-accepted-message {
+  color: var(--forest-green, #4A6B4A);
+  background: rgba(74, 107, 74, 0.08);
+}
+
+.request-declined-message {
+  color: var(--text-secondary, #737373);
+}
+
+.request-pending-message {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-secondary, #737373);
+}
+
+.empty-icon {
+  color: #d1d5db;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+  max-width: 280px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ============================================
+   LOADING
+   ============================================ */
+
 .inbox-loading {
   min-height: 60vh;
   display: flex;
@@ -257,20 +434,186 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  color: var(--text-muted);
+  color: var(--text-secondary, #737373);
 }
 
-/* Status Messages */
-.request-accepted-message,
-.request-declined-message,
-.request-pending-message {
-  font-size: 0.9rem;
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  color: var(--forest-green, #4A6B4A);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14px;
   font-weight: 500;
-  text-align: center;
-  padding: 8px;
-  border-radius: var(--radius-sm);
-  background: var(--background-subtle);
+  margin: 0;
 }
 
-.request-accepted-message { color: var(--forest-green); background: var(--light-green); }
-.request-pending-message { color: var(--text-secondary); }
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast-success {
+  background: var(--forest-green, #4A6B4A);
+  color: white;
+}
+
+.toast-error {
+  background: #c0392b;
+  color: white;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .inbox-container {
+    padding: 80px 16px 0;
+  }
+
+  .inbox-title {
+    font-size: 28px;
+  }
+
+  .title-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .main-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .request-card {
+    padding: 20px;
+  }
+
+  .request-kao {
+    font-size: 36px;
+  }
+
+  .toast-notification {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .inbox-container {
+    padding: 70px 12px 0;
+  }
+
+  .inbox-title-row {
+    gap: 10px;
+  }
+
+  .inbox-title {
+    font-size: 24px;
+  }
+
+  .inbox-main-tabs {
+    padding: 4px;
+    border-radius: 12px;
+  }
+
+  .main-tab {
+    padding: 10px 12px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .main-tab svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .filter-tab {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .request-card {
+    padding: 16px;
+  }
+
+  .request-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .request-status-badge {
+    align-self: flex-start;
+  }
+
+  .request-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-accept,
+  .btn-decline {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .request-card,
+  .main-tab,
+  .filter-tab,
+  .btn-accept,
+  .btn-decline,
+  .toast-notification {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Focus states */
+.back-button:focus-visible,
+.main-tab:focus-visible,
+.filter-tab:focus-visible,
+.btn-accept:focus-visible,
+.btn-decline:focus-visible {
+  outline: 2px solid var(--forest-green, #4A6B4A);
+  outline-offset: 2px;
+}

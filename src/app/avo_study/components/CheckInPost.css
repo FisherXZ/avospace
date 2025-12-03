@@ -1,72 +1,85 @@
-/* Check-In Post Component */
+/* ============================================
+   CHECK-IN POST - PREMIUM MINIMALIST DESIGN
+   Swiss Spa Aesthetic
+   ============================================ */
 
 .checkin-post-card {
-  background: var(--background-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin: 16px 0;
-  transition: all var(--transition-normal);
-  box-shadow: var(--shadow-sm);
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .checkin-post-card:hover {
-  border-color: var(--primary-green);
-  box-shadow: var(--shadow-md);
+  border-color: #e5e5e5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* User Header */
+/* ============================================
+   USER HEADER
+   ============================================ */
+
 .checkin-post-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 20px;
   cursor: pointer;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .checkin-post-kao {
-  font-size: 32px;
+  font-size: 40px;
   line-height: 1;
-  transition: transform var(--transition-fast);
+  transition: transform 0.2s ease;
 }
 
 .checkin-post-header:hover .checkin-post-kao {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .checkin-post-user-info {
   flex: 1;
+  min-width: 0;
 }
 
 .checkin-post-username {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary, #171717);
   margin-bottom: 2px;
+  letter-spacing: -0.01em;
 }
 
 .checkin-post-date {
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--text-secondary, #737373);
+  font-weight: 400;
 }
 
 .checkin-expired-badge {
-  background: #E5E7EB;
-  color: #374151;
+  background: #f0f0f0;
+  color: var(--text-secondary, #737373);
   padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-/* Content */
+/* ============================================
+   CONTENT
+   ============================================ */
+
 .checkin-post-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 /* Info Row - Location + Status + Button */
@@ -77,6 +90,10 @@
   flex-wrap: wrap;
 }
 
+/* ============================================
+   LOCATION
+   ============================================ */
+
 .checkin-post-location {
   display: flex;
   align-items: center;
@@ -84,151 +101,188 @@
 }
 
 .location-icon {
-  font-size: 20px;
+  color: var(--forest-green, #4A6B4A);
+  flex-shrink: 0;
 }
 
 .location-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--forest-green);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  letter-spacing: -0.01em;
 }
 
-.checkin-post-status-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
+/* ============================================
+   STATUS BADGE - PREMIUM DESIGN
+   ============================================ */
 
 .status-badge-post {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
-  color: white;
+  letter-spacing: -0.01em;
 }
 
-.status-badge-post.status-coral {
-  background: var(--coral);
+/* Open to study - Subtle green */
+.status-badge-post.status-open {
+  background: rgba(74, 107, 74, 0.1);
+  color: var(--forest-green, #4A6B4A);
 }
 
-.status-badge-post.status-sky-blue {
-  background: var(--sky-blue);
+.status-badge-post.status-open .status-icon {
+  color: var(--forest-green, #4A6B4A);
 }
 
-.status-badge-post.status-yellow {
-  background: var(--yellow-highlight);
-  color: var(--text-secondary);
+/* Solo mode - Subtle gray */
+.status-badge-post.status-solo {
+  background: #f5f5f5;
+  color: var(--text-secondary, #737373);
 }
 
-.status-badge-post.status-red {
-  background: #E88E8E;
+.status-badge-post.status-solo .status-icon {
+  color: var(--text-secondary, #737373);
 }
 
-.status-badge-post.status-purple {
-  background: #B8A8D8;
+/* On a break - Subtle warm */
+.status-badge-post.status-break {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
 }
 
-.status-badge-post.status-orange {
-  background: #F4B88E;
+.status-badge-post.status-break .status-icon {
+  color: #b45309;
 }
 
-.status-badge-post.status-green {
-  background: var(--sage-green);
-}
-
-.checkin-post-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 12px;
-  background: var(--background-subtle);
-  border-radius: var(--radius-sm);
-  border-left: 3px solid var(--primary-green);
-}
-
-.note-icon {
-  font-size: 16px;
+.status-icon {
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
-.note-text {
-  font-size: 15px;
-  color: var(--text-secondary);
-  font-style: italic;
-  line-height: 1.5;
-}
+/* ============================================
+   SEND REQUEST BUTTON
+   ============================================ */
 
-/* Send Request Button - Compact Inline Version */
 .send-request-button {
-  background: var(--primary-green);
+  background: var(--forest-green, #4A6B4A);
   color: white;
   border: none;
-  border-radius: 20px;
-  padding: 6px 16px;
-  font-size: 14px;
+  border-radius: 10px;
+  padding: 8px 18px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: all var(--transition-normal);
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   margin-left: auto;
+  box-shadow: 0 2px 4px rgba(74, 107, 74, 0.2);
+  letter-spacing: -0.01em;
 }
 
 .send-request-button:hover {
-  background: var(--forest-green);
+  background: #3d5a3d;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(91, 155, 126, 0.3);
+  box-shadow: 0 4px 8px rgba(74, 107, 74, 0.3);
 }
 
 .send-request-button:active {
   transform: translateY(0);
 }
 
-.button-icon {
-  font-size: 14px;
+/* ============================================
+   STATUS NOTE
+   ============================================ */
+
+.checkin-post-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #fafafa;
+  border-radius: 10px;
+  border-left: 3px solid var(--forest-green, #4A6B4A);
 }
+
+.note-icon {
+  color: var(--forest-green, #4A6B4A);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.note-text {
+  font-size: 14px;
+  color: var(--text-secondary, #737373);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ============================================
+   EXPIRED MESSAGE
+   ============================================ */
 
 .checkin-expired-message {
-  margin-top: 8px;
-  padding: 12px;
-  background: var(--background-subtle);
-  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  background: #fafafa;
+  border-radius: 10px;
   text-align: center;
-  color: var(--text-muted);
-  font-size: 14px;
+  color: var(--text-muted, #a3a3a3);
+  font-size: 13px;
+  font-weight: 500;
 }
 
-/* Loading */
+/* ============================================
+   LOADING
+   ============================================ */
+
 .checkin-post-loading {
-  padding: 20px;
-  text-align: center;
-  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: var(--text-secondary, #737373);
+  font-size: 14px;
+  font-weight: 500;
 }
 
-/* Toast Notification */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+
 .toast-notification {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  animation: slideInUp 0.3s ease-out;
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
 }
 
 @keyframes slideInUp {
   from {
-    transform: translateY(100px);
+    transform: translateY(80px);
     opacity: 0;
   }
   to {
@@ -238,15 +292,27 @@
 }
 
 .toast-success {
-  background: var(--primary-green);
+  background: var(--forest-green, #4A6B4A);
   color: white;
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 768px) {
   .checkin-post-card {
-    padding: 16px;
-    margin: 12px 0;
+    padding: 20px;
+  }
+
+  .checkin-post-header {
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+  }
+
+  .checkin-post-kao {
+    font-size: 36px;
   }
 
   .location-name {
@@ -254,28 +320,62 @@
   }
 
   .checkin-post-info-row {
-    gap: 8px;
+    gap: 10px;
   }
 
   .send-request-button {
-    font-size: 13px;
-    padding: 6px 14px;
+    font-size: 12px;
+    padding: 7px 14px;
   }
 
-  .button-icon {
-    font-size: 13px;
+  .toast-notification {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: center;
   }
 }
 
 @media (max-width: 480px) {
+  .checkin-post-card {
+    padding: 16px;
+  }
+
   .checkin-post-info-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
   }
 
   .send-request-button {
     width: 100%;
     justify-content: center;
     margin-left: 0;
+    padding: 10px 18px;
   }
+
+  .checkin-post-note {
+    padding: 12px 14px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .checkin-post-card,
+  .checkin-post-kao,
+  .send-request-button,
+  .toast-notification {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.checkin-post-header:focus-visible,
+.send-request-button:focus-visible {
+  outline: 2px solid var(--forest-green, #4A6B4A);
+  outline-offset: 2px;
 }

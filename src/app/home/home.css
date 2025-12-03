@@ -1,0 +1,294 @@
+/* ============================================
+   HOME/FRIENDS PAGE - PREMIUM MINIMALIST DESIGN
+   Swiss Spa Aesthetic
+   ============================================ */
+
+.home-page-container {
+  min-height: 100vh;
+  background: #fafafa;
+  padding: 88px 24px 80px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.home-content-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.feed-section {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ============================================
+   TAB SWITCHER
+   ============================================ */
+
+.tab-switcher-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.tab-switcher {
+  display: inline-flex;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.tab-button {
+  padding: 10px 32px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary, #737373);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  background: #fafafa;
+  color: var(--text-primary, #171717);
+}
+
+.tab-button.active {
+  background: var(--forest-green, #4A6B4A);
+  color: white;
+  box-shadow: 0 2px 4px rgba(74, 107, 74, 0.2);
+}
+
+.tab-button.active:hover {
+  background: #3d5a3d;
+}
+
+/* ============================================
+   TAB CONTENT
+   ============================================ */
+
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  gap: 20px;
+}
+
+.loading-spinner {
+  color: var(--forest-green, #4A6B4A);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--text-secondary, #737373);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ============================================
+   ERROR STATE
+   ============================================ */
+
+.error-state {
+  background: white;
+  border: 1px solid #fee;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ============================================
+   POSTS LIST
+   ============================================ */
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.post-wrapper {
+  animation: fadeInUp 0.4s ease-out backwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for posts */
+.post-wrapper:nth-child(1) { animation-delay: 0ms; }
+.post-wrapper:nth-child(2) { animation-delay: 50ms; }
+.post-wrapper:nth-child(3) { animation-delay: 100ms; }
+.post-wrapper:nth-child(4) { animation-delay: 150ms; }
+.post-wrapper:nth-child(5) { animation-delay: 200ms; }
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+  text-align: center;
+  padding: 80px 40px;
+  background: white;
+  border: 2px dashed #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.empty-icon {
+  color: var(--text-muted, #a3a3a3);
+  margin: 0 auto 24px;
+}
+
+.empty-state h3 {
+  color: var(--text-primary, #171717);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.01em;
+}
+
+.empty-state p {
+  color: var(--text-secondary, #737373);
+  font-size: 15px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .home-page-container {
+    padding: 72px 16px 60px;
+  }
+
+  .feed-section {
+    max-width: 100%;
+  }
+
+  .tab-switcher-wrapper {
+    margin-bottom: 32px;
+  }
+
+  .tab-button {
+    padding: 9px 24px;
+    font-size: 14px;
+  }
+
+  .posts-list {
+    gap: 20px;
+  }
+
+  .empty-state {
+    padding: 60px 24px;
+  }
+
+  .loading-state {
+    padding: 60px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page-container {
+    padding: 64px 12px 48px;
+  }
+
+  .tab-switcher {
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .posts-list {
+    gap: 16px;
+  }
+
+  .empty-state {
+    padding: 48px 20px;
+  }
+
+  .empty-state h3 {
+    font-size: 18px;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.tab-button:focus-visible {
+  outline: 2px solid var(--forest-green, #4A6B4A);
+  outline-offset: 2px;
+}
+

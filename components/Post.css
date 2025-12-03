@@ -1,0 +1,191 @@
+/* ============================================
+   POST COMPONENT - PREMIUM MINIMALIST DESIGN
+   Swiss Spa Aesthetic
+   ============================================ */
+
+.post-card {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.post-card.clickable {
+  cursor: pointer;
+}
+
+.post-card.clickable:hover {
+  border-color: #e5e5e5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   POST LOADING STATE
+   ============================================ */
+
+.post-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+}
+
+.post-loading-spinner {
+  color: var(--text-muted, #a3a3a3);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.post-loading-text {
+  color: var(--text-secondary, #737373);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ============================================
+   POST HEADER
+   ============================================ */
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.post-avatar {
+  min-width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1px solid #e5e5e5;
+  flex-shrink: 0;
+  padding: 0 12px;
+  background: #fafafa;
+}
+
+.post-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-username-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.post-username {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #171717);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.post-date {
+  color: var(--text-secondary, #737373);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.post-kao {
+  color: var(--text-muted, #a3a3a3);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* ============================================
+   POST CONTENT
+   ============================================ */
+
+.post-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary, #171717);
+  margin: 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .post-card {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .post-avatar {
+    min-width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    font-size: 16px;
+  }
+
+  .post-username {
+    font-size: 15px;
+  }
+
+  .post-date,
+  .post-kao {
+    font-size: 12px;
+  }
+
+  .post-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .post-card {
+    padding: 16px;
+  }
+
+  .post-header {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .post-avatar {
+    min-width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 15px;
+    padding: 0 10px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card {
+    transition: none;
+  }
+  
+  .post-loading-spinner {
+    animation: none;
+  }
+}
+
+/* Focus state for keyboard navigation */
+.post-card.clickable:focus-visible {
+  outline: 2px solid var(--forest-green, #4A6B4A);
+  outline-offset: 2px;
+}
+
